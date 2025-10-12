@@ -2,8 +2,6 @@
 % !TeX program = xelatex
 %==================PREAMBOLO=======================%
 \input{preamble/preamble.tex}
-\bibliographystyle{plain}   % or abbrv/unsrt etc.
-\bibliography{references}   % references.bib must exist
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{booktabs}
@@ -15,6 +13,10 @@
 \author{Marco Casu}
 \date{\vspace{-5ex}}
 \begin{document}
+
+\bibliographystyle{plain}   % or abbrv/unsrt etc.
+\bibliography{references}   % references.bib must exist
+\cite{} % needed to fix "found no citation error"
 
 %==================COPERTINA=======================%
 \begin{titlepage}
