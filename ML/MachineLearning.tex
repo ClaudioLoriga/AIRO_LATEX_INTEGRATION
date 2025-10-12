@@ -1,7 +1,9 @@
 \documentclass[10pt, letterpaper]{report}
 % !TeX program = xelatex
 %==================PREAMBOLO=======================%
-\input{../../preamble/preamble.tex}
+\input{preamble/preamble.tex}
+\bibliographystyle{plain}   % or abbrv/unsrt etc.
+\bibliography{references}   % references.bib must exist
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{booktabs}
@@ -30,7 +32,7 @@
     }
 \end{figure}
 \vfill 
-\centering \includegraphics[width=0.4\textwidth ]{../../preamble/Stemma_sapienza.png} \acc
+\centering \includegraphics[width=0.4\textwidth ]{preamble/Stemma_sapienza.png} \acc
 \centering \Large \color{sapienza}Faculty of Information Engineering, Computer Science and Statistics\\
 Department of Computer, Control and Management Engineering\\
 Master's degree in Artificial Intelligence and Robotics
@@ -44,7 +46,7 @@ This document summarizes and presents the topics for the \titolo course for the 
 \vfill
 \begin{figure}[h!]
     \raggedright
-    \includegraphics[width=0.4\textwidth,right ]{../../preamble/tomodachi.pdf} 
+    \includegraphics[width=0.4\textwidth,right ]{preamble/tomodachi.pdf} 
 \end{figure}
 \newpage %\setmainfont{Times New Roman}
 \normalsize
