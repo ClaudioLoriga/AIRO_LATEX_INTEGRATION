@@ -64,7 +64,7 @@ on arguments which are sensible to subjects with basic mathematical skills (like
 \fancyhead[R]{Sezione \thesection}
 \fancyfoot[C]{\thepage}
 \fancyfoot[L]{\titolo}
-\fancyfoot[R]{ Marco Casu}
+\fancyfoot[R]{ Marco Casu, Claudio Loriga}
 %\fancyfoot[R]{\setmainfont{Palace Script MT}\huge Marco Casu \setmainfont{Times New Roman}}
 %==================FOOTER e HEADER=======================%
 
@@ -190,57 +190,57 @@ Once we have synthesized $\hat V$, we can let the model play new games (against 
 \newpage
 \section{Types of Machine Learning Problems}
 
-Machine learning is a vast field encompassing a variety of problem types, each defined by the kind of data available and the way the model learns from it. 
+Machine learning is a vast field encompassing a variety of problem types, each defined by the kind of data available and the way the model learns from it.
 Broadly speaking, learning problems can be divided into three main categories:
 \begin{itemize}
-  \item \textbf{Supervised Learning}
-  \item \textbf{Unsupervised Learning}
-  \item \textbf{Reinforcement Learning}
+	\item \textbf{Supervised Learning}
+	\item \textbf{Unsupervised Learning}
+	\item \textbf{Reinforcement Learning}
 \end{itemize}
 
 Each of these paradigms addresses different situations and goals. In what follows we provide an overview to clarify their purposes and fundamental differences.
 
 \bigskip
-\textbf{Supervised Learning.} 
-In supervised learning, the model is trained on a dataset that contains \emph{input–output pairs}. 
-Each example is composed of an input vector $x$ (the features) and a corresponding label or target value $y$. 
+\textbf{Supervised Learning.}
+In supervised learning, the model is trained on a dataset that contains \emph{input–output pairs}.
+Each example is composed of an input vector $x$ (the features) and a corresponding label or target value $y$.
 The goal is to learn a mapping $f: X \rightarrow Y$ such that, given a new unseen input $x'$, the model can predict its output $\hat y = f(x')$ as accurately as possible.
 
-The term ``supervised'' refers to the fact that the learning process is guided by known answers: the model is explicitly told what the correct output should be for each example. 
+The term ``supervised'' refers to the fact that the learning process is guided by known answers: the model is explicitly told what the correct output should be for each example.
 The performance of the model is typically measured by comparing its predictions $\hat y$ with the true labels $y$ through a loss function.
 
 Supervised learning problems are commonly divided into two subcategories:
 \begin{itemize}
-  \item \textbf{Classification:} the goal is to assign each input to one of a finite set of categories. 
-  Examples include recognizing handwritten digits, detecting spam emails, or classifying medical images into healthy and pathological classes.
-  \item \textbf{Regression:} the goal is to predict a continuous value rather than a discrete label. 
-  Typical examples are forecasting house prices, estimating temperature, or predicting stock market trends.
+	\item \textbf{Classification:} the goal is to assign each input to one of a finite set of categories.
+	      Examples include recognizing handwritten digits, detecting spam emails, or classifying medical images into healthy and pathological classes.
+	\item \textbf{Regression:} the goal is to predict a continuous value rather than a discrete label.
+	      Typical examples are forecasting house prices, estimating temperature, or predicting stock market trends.
 \end{itemize}
 
 Supervised learning is the most widely studied and applied paradigm, as labeled data are often available and the learning objectives are clearly defined.
 
 \bigskip
 \textbf{Unsupervised Learning.}
-In contrast to supervised learning, in unsupervised learning we do \emph{not} have labeled data. 
-The dataset consists only of input examples $\{x_1, x_2, \dots, x_n\}$ without corresponding outputs. 
+In contrast to supervised learning, in unsupervised learning we do \emph{not} have labeled data.
+The dataset consists only of input examples $\{x_1, x_2, \dots, x_n\}$ without corresponding outputs.
 The aim is to uncover hidden structures or patterns within the data itself.
 
-Since there is no external notion of ``correctness,'' the model must learn to organize or represent the data based solely on its internal relationships. 
+Since there is no external notion of ``correctness,'' the model must learn to organize or represent the data based solely on its internal relationships.
 Typical unsupervised tasks include:
 \begin{itemize}
-  \item \textbf{Clustering:} grouping similar data points together according to some notion of similarity or distance (e.g., grouping customers by purchasing behavior or documents by topic).
-  \item \textbf{Dimensionality Reduction:} discovering compact representations of high-dimensional data while preserving essential information (e.g., using Principal Component Analysis or autoencoders to visualize complex data in two dimensions).
+	\item \textbf{Clustering:} grouping similar data points together according to some notion of similarity or distance (e.g., grouping customers by purchasing behavior or documents by topic).
+	\item \textbf{Dimensionality Reduction:} discovering compact representations of high-dimensional data while preserving essential information (e.g., using Principal Component Analysis or autoencoders to visualize complex data in two dimensions).
 \end{itemize}
 
 Unsupervised learning is often used for data exploration, feature extraction, or as a preprocessing step for supervised tasks.
 
 \bigskip
 \textbf{Reinforcement Learning.}
-Reinforcement learning (RL) represents a distinct paradigm where an \emph{agent} learns by interacting with an \emph{environment}. 
-At each time step, the agent observes the current state $s$, selects an action $a$, and receives a numerical \emph{reward} $r$ that measures the immediate outcome of that action. 
+Reinforcement learning (RL) represents a distinct paradigm where an \emph{agent} learns by interacting with an \emph{environment}.
+At each time step, the agent observes the current state $s$, selects an action $a$, and receives a numerical \emph{reward} $r$ that measures the immediate outcome of that action.
 Over time, the agent aims to learn a policy $\pi(s)$ that maximizes the expected cumulative reward.
 
-Unlike supervised learning, there are no fixed ``correct'' outputs to imitate. 
+Unlike supervised learning, there are no fixed ``correct'' outputs to imitate.
 Instead, the agent must discover good strategies through \emph{trial and error}, balancing exploration of new actions and exploitation of known rewarding ones.
 
 Reinforcement learning is widely used in scenarios where decisions must be made sequentially and outcomes depend on long-term consequences—for example, game playing (such as chess or Go), robotics control, and autonomous driving.
@@ -252,18 +252,26 @@ Together, they form the conceptual foundation for the majority of modern machine
 
 
 \begin{definition}
-	Given a function $f:X\rightarrow Y$, and a training set $X_D\subset X$ containing information about $f$, \textbf{learning} the function $f$ means computing an approximated function $\hat f$ such that is much close as possible to $f$ on $X$\begin{equation}
-		\hat f(x)\simeq f(x), \ \ x\in X.
+	Given a function $f: X \rightarrow Y$, and a training set $X_D \subset X$ containing information about $f$, \textbf{learning} the function $f$ means computing an approximated function $\hat f$ such that it is as close as possible to $f$ on $X$:
+	\begin{equation}
+		\hat f(x) \simeq f(x), \quad x \in X.
 	\end{equation}
 \end{definition}
-This is not a simple problem, $f$ is not computable, so the difference $f-\hat f$, and $X$ is usually uncountable ora big set, way bigger than the training set $X_D$. \bigskip
+
+This is a challenging problem because the true function $f$ is unknown and usually not computable, while the input space $X$ is often extremely large or continuous.
+In practice, we can only access a small subset $X_D$, so $\hat f$ must be learned from limited examples and still perform well on unseen data — this property is known as \textbf{generalization}.\bigskip
+
+The goal of learning is therefore to find, within a chosen family of models, the function $\hat f$ that best approximates $f$ on the training set and generalizes to new inputs.
+This balance between fitting known data and adapting to new situations is the core difficulty of every machine learning problem.\bigskip
 
 Machine learning problems can be classified in terms of the input data set $D$, given a target function $f:X\rightarrow Y$ a problem is\begin{itemize}
-	\item a \textbf{supervised learning} problem if $D=\bigcup_{i=1}^n\{(x_i,y_i)\}\subset X\times Y$ .
-	\item an \textbf{unsupervised learning} problem if $D=\bigcup_{i=1}^n\{(x_i)\}\subset X$.
+	\item a \textbf{supervised learning} problem if the dataset is labeled: $D=\bigcup_{i=1}^n\{(x_i,y_i)\}\subset X\times Y$ .
+	\item an \textbf{unsupervised learning} problem if the dataset is not labeled: $D=\bigcup_{i=1}^n\{(x_i)\}\subset X$.
 	\item a \textbf{reinforcement learning} problem, the condition on the input dataset will be discussed later.
 \end{itemize}
-The problems can also be classified in terms of the target function $f:X\rightarrow Y$
+
+The problems can also be classified in terms of the target function $f : X \rightarrow Y$, that is, according to the type of input space $X$ and output space $Y$.
+Different combinations of these sets define different learning settings:
 \begin{align*}
 	 & X=\begin{cases}
 		     A_1\times \dots \times A_m, \ A_i \text{ finite set} \ \ \textbf{(Finite Discrete Problem)} \\
@@ -274,20 +282,41 @@ The problems can also be classified in terms of the target function $f:X\rightar
 		     \{C_1,C_2\times C_k\} \ \ \textbf{(Classification)}
 	     \end{cases}
 \end{align*}
-special case (\textbf{Concept Learning}):\begin{align*}
+
+Here, $X$ represents the \textbf{input space}, that is, the domain of possible observations or feature vectors, while $Y$ represents the \textbf{output space}, the type of value the model aims to predict.
+
+\begin{itemize}
+	\item In a \textbf{regression problem}, the goal is to predict one or more real-valued quantities, such as temperature, price, or time. The function $f$ is thus continuous, mapping inputs in $\R^n$ to outputs in $\R^k$.
+	\item In a \textbf{classification problem}, the goal is to assign each input to one of a finite number of categories (classes) $\{C_1, \dots, C_k\}$, such as recognizing digits, detecting spam, or identifying an animal in an image.
+\end{itemize}
+
+\bigskip
+A useful \textbf{special case} is known as \textit{concept learning}, where both input and output spaces are discrete:
+\begin{align*}
 	 & X = A_1\times \dots \times A_m, \ A_i \text{ finite set} \\
 	 & Y = \{0,1\}
 \end{align*}
-Classification problems is also known as \textit{Pattern Recognition Problems}, the goal is to return the class to which a specific instance belong.\begin{center}
+
+In this setting, the goal is to learn a Boolean function that decides whether an instance satisfies a certain property (1) or not (0).
+This formulation captures simple binary classification tasks.
+
+\bigskip
+Finally, classification problems are often referred to as \textit{pattern recognition problems}, since their purpose is to identify the category or pattern to which a specific instance belongs.
+
+\begin{center}
 	\includegraphics[width=0.6\textwidth]{images/classifier.png}
 \end{center}
+
 Some examples are:\begin{itemize}
-	\item face/object/character recognition
-	\item speech/sound recognition
-	\item medical diagnosis
-	\item document classification.
+	\item Face/Object/Character Recognition
+	\item Speech/Sound Recognition
+	\item Medical Diagnosis
+	\item Document Classification.
 \end{itemize}
+
+\bigskip
 Regression problems consists in approximating real valued functions.
+
 \begin{center}
 	\includegraphics[width=0.35\textwidth]{images/regression.eps}
 \end{center}
