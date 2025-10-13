@@ -246,10 +246,17 @@ Instead, the agent must discover good strategies through \emph{trial and error},
 Reinforcement learning is widely used in scenarios where decisions must be made sequentially and outcomes depend on long-term consequences—for example, game playing (such as chess or Go), robotics control, and autonomous driving.
 
 \bigskip
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.35\textwidth]{images/RL_diagram.png}
+	\caption{Reinforcement Learning}
+	\label{img:ReinforcementLearning}
+\end{figure}
+
+\bigskip
 In summary, these three paradigms differ in how they use data:
 supervised learning learns from labeled examples, unsupervised learning seeks patterns in unlabeled data, and reinforcement learning learns through interaction and feedback from the environment.
 Together, they form the conceptual foundation for the majority of modern machine learning systems.
-
 
 \begin{definition}
 	Given a function $f: X \rightarrow Y$, and a training set $X_D \subset X$ containing information about $f$, \textbf{learning} the function $f$ means computing an approximated function $\hat f$ such that it is as close as possible to $f$ on $X$:
@@ -290,48 +297,32 @@ Here, $X$ represents the \textbf{input space}, that is, the domain of possible o
 	\item In a \textbf{classification problem}, the goal is to assign each input to one of a finite number of categories (classes) $\{C_1, \dots, C_k\}$, such as recognizing digits, detecting spam, or identifying an animal in an image.
 \end{itemize}
 
+\newpage
+Here we offer two examples of, respectevely, regression and classification problems:
+
 \bigskip
-A useful \textbf{special case} is known as \textit{concept learning}, where both input and output spaces are discrete:
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.35\textwidth]{images/classifier.png}
+	\caption{A Classification Problem}
+	\label{img:ClassificationProblem}
+\end{figure}
+
+\bigskip
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.35\textwidth]{images/regression.eps}
+	\caption{A Regression Problem}
+	\label{img:RegressionProblem}
+\end{figure}
+
+\bigskip
+A useful \textit{special case} is known as \textbf{concept learning}, where both input and output spaces are discrete:
 \begin{align*}
 	 & X = A_1\times \dots \times A_m, \ A_i \text{ finite set} \\
 	 & Y = \{0,1\}
 \end{align*}
 
-In this setting, the goal is to learn a Boolean function that decides whether an instance satisfies a certain property (1) or not (0).
-This formulation captures simple binary classification tasks.
-
-\bigskip
-Finally, classification problems are often referred to as \textit{pattern recognition problems}, since their purpose is to identify the category or pattern to which a specific instance belongs.
-
-\begin{center}
-	\includegraphics[width=0.6\textwidth]{images/classifier.png}
-\end{center}
-
-Some examples are:\begin{itemize}
-	\item Face/Object/Character Recognition
-	\item Speech/Sound Recognition
-	\item Medical Diagnosis
-	\item Document Classification.
-\end{itemize}
-
-\bigskip
-Regression problems consists in approximating real valued functions.
-
-\begin{center}
-	\includegraphics[width=0.35\textwidth]{images/regression.eps}
-\end{center}
-Unsupervised learning discovers data patterns without a specific output. The main goal is to understand what's normal in a dataset. \textit{Clustering} is a key technique that groups similar data points. Applications include customer segmentation, image compression, and bioinformatics motif learning.\bigskip
-
-Reinforcement learning consists in learning a policy, which is a strategy that tells the agent what action to take in any given situation (or state) to maximize its long-term reward. This is often represented as a function that maps a state to an action. Unlike supervised learning, where the model is trained with labeled examples, in reinforcement learning agents learn through a process of trial and error.\bigskip
-
-They don't have a correct answer to guide them. Instead, they receive sparse and time-delayed rewards. This means the feedback (the reward) for a good action might not come immediately, and it might be a simple, numerical value (like +1 for winning a game or -1 for losing). Some examples are:\begin{itemize}
-	\item Game playing: Think of programs that have learned to play chess, Go, or video games better than humans.
-	\item Robotic tasks: A robot learning to navigate a room, pick up an object, or perform a specific manufacturing task.
-	\item Any dynamical system with an unknown or partially known model: This is a broad category that includes things like optimizing traffic flow, managing a power grid, or controlling financial trading strategies.
-\end{itemize}
-\begin{center}
-	\includegraphics[width=0.35\textwidth]{images/RL_diagram.png}
-\end{center}
 In concept learning, the output consists in only two classes, the target function $c:X\rightarrow\{0,1\}$ maps  any kind of input in one of two distinct values. The following example model a program that predict if is a good day to play Tennis, the input set is $$
 	X=Day\times Outlook \times Temperature \times Humidity \times Wind
 $$
@@ -357,6 +348,20 @@ the output set is $PlayTennis=\{\text{Yes, No}\}$. An example of data samples:\b
 		\bottomrule
 	\end{tabular}
 \end{center}
+
+\newpage
+\bigskip
+Finally, classification problems are often referred to as \textit{pattern recognition problems}, since their purpose is to identify the category or pattern to which a specific instance belongs.
+
+\bigskip
+Some examples are:\begin{itemize}
+	\item Face/Object/Character Recognition
+	\item Speech/Sound Recognition
+	\item Medical Diagnosis
+	\item Document Classification.
+\end{itemize}
+
+\bigskip
 \section{Performance Evaluation}
 Usually, we call \textbf{Hypothesis} a possible learned function $h$, and we define $H$ as the \textbf{Hypothesis space}, such space contains all possible function that can be learnt (all possible approximation of the target function). In this terms, a learning problem is described as a search in the hypothesis space using the given dataset $D$, that aims to find the best possible approximation $h^*$:\begin{equation}\label{sol_hypothesis}
 	h^*=\arg \max_{h\in H} Performance(h,D)
