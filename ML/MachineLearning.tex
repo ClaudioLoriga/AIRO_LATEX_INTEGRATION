@@ -645,43 +645,64 @@ It is ideal to choose $T$ and $S$ such that they are drawn from the same underly
 In that case, the random variable $\text{error}_{S}(h)$ is an \textbf{unbiased estimator} of the true error $\text{error}_{\mathcal D}(h)$.
 
 \bigskip
-\subsection{The Cross Validation Algorithm and others Performance Metrics}
-There exists an algorithm to estimate the expected value of the sample error, more the dataset $D$ is large, more the estimation will be precise.
-The algorithm \ref{alg:CrossVal} estimate the expected value of the error, with $L$ is denoted a fixed learning algorithm:\begin{itemize}
-	\item $h=L(T)$, is the result of the learning algorithm $L$ applied on the training set $T$
-\end{itemize}
+\subsection{The Cross Validation Algorithm and Other Performance Metrics}
+
+Estimating a model’s true error from limited data can be unreliable, since a single train–test split may depend heavily on which samples are chosen.  
+To obtain a more stable and statistically sound estimate, we can use \textbf{cross-validation}, which averages results over multiple train/test partitions.
+
+\bigskip
+The following algorithm estimates the expected value of the sample error.
+The larger the dataset $D$, the more accurate this estimation will be.
+Let $L$ denote a fixed learning algorithm and let $h = L(T)$ be the hypothesis learned from a training set $T$.
+
 \begin{algorithm}
 	\caption{K-Fold Cross Validation}\label{alg:CrossVal}
 	\begin{algorithmic}
 		\Require $D$, $k$, $h$, $L$
-		\State partition $D$ in $k$ disjoint sets $S_1,S_2\dots, S_k$
-		\For{$i=1,2\dots,k$}
-		\State $T_i\leftarrow  D\backslash S_i$
-		\State $h_i\leftarrow L(T_i) $
+		\State partition $D$ into $k$ disjoint subsets $S_1, S_2, \dots, S_k$
+		\For{$i=1,2,\dots,k$}
+		\State $T_i \leftarrow D \setminus S_i$
+		\State $h_i \leftarrow L(T_i)$
 		\State $\delta_i = \text{error}_{S_i}(h_i)$
 		\EndFor
-		\State\Return $\text{error}_{L,D}=\displaystyle\frac{1}{k}\sum_{i=1}^k\delta_i$
+		\State\Return $\text{error}_{L,D} = \displaystyle\frac{1}{k}\sum_{i=1}^{k}\delta_i$
 	\end{algorithmic}
 \end{algorithm}
-We define the accuracy of a learning algorithm $L$ as \begin{equation}
-	\text{accuracy}=1-\text{error}_{L,D}.
+
+In this procedure, each subset $S_i$ serves once as a test set while the remaining $k-1$ subsets form the training data.
+The final estimate of the model error is the average of the $k$ test errors, providing a more robust measure of generalization than a single holdout split.
+
+\bigskip
+We define the accuracy of a learning algorithm $L$ as
+\begin{equation}
+	\text{accuracy} = 1 - \text{error}_{L,D}.
 \end{equation}
-The cross-validation algorithm can be used to compare the accuracy of two different learning methods $L_a$ and $L_b$, as shown in algorithm \ref{alg:CrossVal_compare}.
+Cross-validation can also be used to compare two learning algorithms, $L_a$ and $L_b$, by evaluating the difference in their cross-validated errors, as shown in Algorithm~\ref{alg:CrossVal_compare}.
 
 \begin{algorithm}
 	\caption{Accuracy Comparator}\label{alg:CrossVal_compare}
 	\begin{algorithmic}
-		\Require $D$, $k$, $h$, $L$
-		\State partition $D$ in $k$ disjoint sets $S_1,S_2\dots, S_k$
-		\For{$i=1,2\dots,k$}
-		\State $T_i\leftarrow  D\backslash S_i$
-		\State $h_a\leftarrow L_a(T_i) $
-		\State $h_b\leftarrow L_b(T_i) $
-		\State $\delta_i = \text{error}_{S_i}(h_a)-\text{error}_{S_i}(h_b)$
+		\Require $D$, $k$, $L_a$, $L_b$
+		\State partition $D$ into $k$ disjoint subsets $S_1,S_2,\dots,S_k$
+		\For{$i=1,2,\dots,k$}
+		\State $T_i \leftarrow D \setminus S_i$
+		\State $h_a \leftarrow L_a(T_i)$
+		\State $h_b \leftarrow L_b(T_i)$
+		\State $\delta_i = \text{error}_{S_i}(h_a) - \text{error}_{S_i}(h_b)$
 		\EndFor
-		\State\Return $\bar\delta=\displaystyle\frac{1}{k}\sum_{i=1}^k\delta_i$
+		\State\Return $\bar{\delta} = \displaystyle\frac{1}{k}\sum_{i=1}^k \delta_i$
 	\end{algorithmic}
 \end{algorithm}
+
+A positive value of $\bar{\delta}$ indicates that $L_b$ performs better on average, while a negative value favors $L_a$.
+
+\bigskip
+\textbf{Remarks.}
+\begin{itemize}
+	\item Typical values for $k$ are $5$ or $10$: smaller $k$ reduces computation, larger $k$ reduces variance.
+	\item The special case $k = |D|$ corresponds to \textbf{leave-one-out cross-validation (LOOCV)}.
+	\item When class proportions must be preserved across folds, we use \textbf{stratified cross-validation}.
+\end{itemize}
 
 Now that we defined the sample error, we can give a formal definition of overfitting. Let $h$  to be an hypothesis for a model, $h$ is overfitting is exists an hypothesis $h'$ such that\begin{align}
 	 & \text{error}_{S}(h)<\text{error}_{S}(h')               \\ &\land\\
