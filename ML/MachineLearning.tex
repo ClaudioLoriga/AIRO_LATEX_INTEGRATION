@@ -398,22 +398,22 @@ where each example $(x_i, c(x_i))$ pairs an input $x_i \in X$ with its correspon
 \bigskip
 In an ideal scenario, all training examples are labeled correctly — we call such a dataset \textbf{noise-free} or \textbf{perfect}:
 \[
-D_{\text{perfect}} = \bigcup_{i=1}^n \{(x_i, c(x_i))\}.
+	D_{\text{perfect}} = \bigcup_{i=1}^n \{(x_i, c(x_i))\}.
 \]
 
 However, in practice data are often affected by \textbf{noise}, meaning that some labels or features may be incorrect, uncertain, or perturbed by random variation. We can represent this as:
 \[
-D_{\text{noisy}} = \bigcup_{i=1}^n \{(x_i, c(x_i) + \varepsilon_i)\}, \qquad \varepsilon_i \in \mathbb{R}.
+	D_{\text{noisy}} = \bigcup_{i=1}^n \{(x_i, c(x_i) + \varepsilon_i)\}, \qquad \varepsilon_i \in \mathbb{R}.
 \]
 
 Here, $\varepsilon_i$ represents the \textbf{noise term}, which can arise from measurement errors, subjective labeling, missing information, or inherent randomness in the process that generated the data. Noise introduces ambiguity because the same input $x_i$ might be associated with inconsistent labels in different samples.
 
 \bigskip
 \begin{definition}
-Given a target function $c$ and a set of sample points $X_D$, a hypothesis $h$ is said to be \textbf{consistent} with the training data if
-\[
-h(x) = c(x), \quad \forall x \in X_D.
-\]
+	Given a target function $c$ and a set of sample points $X_D$, a hypothesis $h$ is said to be \textbf{consistent} with the training data if
+	\[
+		h(x) = c(x), \quad \forall x \in X_D.
+	\]
 \end{definition}
 
 In other words, a consistent hypothesis correctly classifies all examples in the training dataset.
@@ -447,21 +447,21 @@ The dataset is given by:
 
 Given a hypothesis space $H$, consider the following four hypotheses:
 \begin{align*}
-	 & h_1(n)=+\iff n\text{ is odd},\\
-	 & h_2(n)=+\iff n\le 5,\\
-	 & h_3(n)=+\iff n\text{ is either 1 or prime},\\
+	 & h_1(n)=+\iff n\text{ is odd},               \\
+	 & h_2(n)=+\iff n\le 5,                        \\
+	 & h_3(n)=+\iff n\text{ is either 1 or prime}, \\
 	 & h_4(n)=+\iff n\in\{1,3,5\}.
 \end{align*}
 
 If $n=11$, then:
 \begin{align*}
-	 & h_1(11)=+,\\
-	 & h_2(11)=-,\\
-	 & h_3(11)=+,\\
+	 & h_1(11)=+, \\
+	 & h_2(11)=-, \\
+	 & h_3(11)=+, \\
 	 & h_4(11)=-.
 \end{align*}
 
-The problem is that we cannot tell which of the four hypotheses is “better.”  
+The problem is that we cannot tell which of the four hypotheses is “better.”
 They all fit the training data equally well, but they generalize differently on unseen examples.
 
 \bigskip
@@ -471,10 +471,10 @@ Now, consider an expanded hypothesis space $H'$, defined as the power set of $H$
 \end{equation}
 The set $H'$ contains more information than $H$. For $\theta \in H'$, we define:
 \begin{align}
-	\theta &= \bigcup_i\{h_i\},\\
-	\theta(x)&=\operatorname{maj}\bigcup_i\{h_i(x)\},
+	\theta    & = \bigcup_i\{h_i\},                     \\
+	\theta(x) & =\operatorname{maj}\bigcup_i\{h_i(x)\},
 \end{align}
-where the function $\operatorname{maj}$ returns the most frequent label in the set.  
+where the function $\operatorname{maj}$ returns the most frequent label in the set.
 If two labels occur with the same frequency, $\operatorname{maj}$ is undefined.
 
 \bigskip
@@ -485,7 +485,7 @@ For instance, at $n=11$:
 so the classification is undefined.
 
 \bigskip
-This means that even though $H'$ is more expressive than $H$, it fails to generalize: it cannot classify a point that $H$ could classify.  
+This means that even though $H'$ is more expressive than $H$, it fails to generalize: it cannot classify a point that $H$ could classify.
 This situation is known as \textbf{overfitting}: the hypothesis space is too rich, leading to instability and poor generalization.
 
 \bigskip
@@ -510,7 +510,7 @@ In this case, no consistent hypothesis exists in $H$, because no single rectangl
 	\includegraphics[width=0.6\textwidth]{images/N2_hypothesis_2.eps}
 \end{center}
 
-If we extend the hypothesis space to $H'=\mathcal P(H)$, we can represent a function using multiple rectangles.  
+If we extend the hypothesis space to $H'=\mathcal P(H)$, we can represent a function using multiple rectangles.
 Now consistent hypotheses exist, but the model becomes too specific and fails to generalize — predicting $+$ almost everywhere:
 
 \begin{center}
@@ -535,25 +535,45 @@ If $n$ measures the “size” or expressive power of the hypothesis space, we c
 
 As model complexity increases, training error decreases, but test error eventually rises after a certain point — showing that the best hypothesis is not the most complex one, but the one that achieves the right balance between fit and generalization.
 
-\subsection{Error Estimation and Performance Metric}
-We want to define a metric for the performance of a model, to estimate how a given hypothesis $h$ is good respect to the others. We have to introduce some statistical methods, let's consider a target function\begin{equation}
-	f:X\rightarrow Y
+\bigskip
+\subsection{Error Estimation and Performance Metrics}
+
+When we train a machine learning model, we want to evaluate how good a hypothesis $h$ is compared to others — not only on the training data, but also on unseen examples.
+Since the available dataset represents only a small sample of all possible inputs, this evaluation cannot be done deterministically.
+We therefore rely on \textbf{statistical methods} to estimate the model’s true performance.
+
+\bigskip
+Let us consider a target function
+\begin{equation}
+	f : X \rightarrow Y,
 \end{equation}
-where $Y$ is countable (classification problem). Let $\mathcal D$ to be a probability distribution over $X$.
+where $Y$ is countable (classification problem).
+We assume that examples are drawn according to an unknown probability distribution $\mathcal D$ over the input space $X$.
+
 \begin{definition}\label{def:prob_distr}
-	If $X$ is a countable subset of $\R^n$, $\mathcal D$ is a probability distribution on $X$ if\begin{eqnarray}
-		\forall x\in X, \ \ \mathcal D(x)\in [0,1]
+	If $X$ is a countable subset of $\R^n$, $\mathcal D$ is a probability distribution on $X$ if
+	\begin{eqnarray}
+		\forall x\in X, \ \ \mathcal D(x)\in [0,1],
 	\end{eqnarray}
-	and \begin{align*}
-		 & \sum_{x\in X}\mathcal D(x)=1
-	\end{align*}
-	if $X$ is an uncountable subset of $\R^n$,  $\mathcal D$ is a probability distribution on $X$ if \begin{eqnarray}
-		\forall x\in X, \ \ \mathcal D(x)\ge 0
-	\end{eqnarray}
+	and
 	\begin{align*}
-		 & \int_X\mathcal D(x)dx=1
+		\sum_{x\in X}\mathcal D(x)=1.
+	\end{align*}
+	\newpage
+	If $X$ is an uncountable subset of $\R^n$, $\mathcal D$ is a probability distribution on $X$ if
+	\begin{eqnarray}
+		\forall x\in X, \ \ \mathcal D(x)\ge 0,
+	\end{eqnarray}
+	and
+	\begin{align*}
+		\int_X\mathcal D(x)\,dx=1.
 	\end{align*}
 \end{definition}
+
+The distribution $\mathcal D$ represents the underlying process that generates the data.
+Since it is unknown, we can only estimate a model’s performance statistically — using finite samples from $\mathcal D$.
+
+\bigskip
 \begin{definition}
 	Given a target function $f:X\rightarrow Y$, an hypothesis $h$ and a probability distribution $\mathcal D$ on $X$, the \textbf{true error} is the probability that $h$ will misclassify an instance $x\in X$ drawn according to the distribution $\mathcal D$:
 \end{definition}
@@ -586,26 +606,45 @@ We want to formalize this expected value, in this case the sample error is a ran
 	 & \Omega =\{\mathcal S \ : \ \mathcal S \subset X \land |\mathcal S|=n\}
 \end{align}
 in this context, $n$ is fixed. The probability of getting a certain value $\gamma$ from this random variable, is the probability to extract from $X$ a subset $\mathcal S$ of $n$ items such that, the sample error is $\gamma$, and this depends from the probability distribution $\mathcal D$ on $X$. The expected value $\VA(\text{error}_{\mathcal S}(h))$ is now well defined.
+
+\newpage
 \subsection{Unbiased Estimation}
+
 \begin{definition}
-	The \textbf{bias} is defined as the expected value of the difference between the sample error and the true error:
+	The \textbf{bias} is defined as the expected difference between the sample error and the true error:
 \end{definition}
 \begin{equation}
-	\VA(\text{error}_{\mathcal S}(h))-\text{error}_{\mathcal D}(h).
+	\VA(\text{error}_{\mathcal S}(h)) - \text{error}_{\mathcal D}(h).
 \end{equation}
-We want to find an unbiased sample error, in such case:\begin{equation}
-	\text{bias = 0} \implies \VA(\text{error}_{\mathcal S}(h))=\text{error}_{\mathcal D}(h)
+
+An estimator is said to be \textbf{unbiased} if its expected value equals the quantity it aims to estimate, that is:
+\begin{equation}
+	\text{bias} = 0 \ \ \implies \ \ \VA(\text{error}_{\mathcal S}(h)) = \text{error}_{\mathcal D}(h).
 \end{equation}
-To compute an unbiased estimation, we need to train an evaluate an hypothesis $h$ on different set, let $D$ to be the dataset, we have to split $D$ in two disjoint set\begin{align}
-	 & D=T\cup S           \\
-	 & T\cap S = \emptyset
+
+\bigskip
+If we compute the sample error on the same data used to train the hypothesis $h$, the resulting estimate is typically \emph{optimistically biased} — the model performs better on familiar examples than on unseen ones.  
+To obtain an unbiased estimate of the true error, we must evaluate $h$ on data that were not used during training.
+
+\bigskip
+Let $D$ be the available dataset. We split it into two disjoint subsets:
+\begin{align}
+	 & D = T \cup S, \\
+	 & T \cap S = \emptyset,
 \end{align}
-Usually, $\frac{|T|}{|D|}\simeq \frac{2}{3}$.
-We use $T$ to train our learning function to get $h$, and then, we calculate the sample error on $S$\begin{equation}
-	\text{error}_{ S}(h)=
-	\frac{1}{| S|}\sum_{x\in S}\delta(f(x)\ne h(x))
+where $T$ (the \textbf{training set}) is used to learn the hypothesis $h$, and $S$ (the \textbf{test set}) is used to estimate its performance.  
+Typically, $\frac{|T|}{|D|} \simeq \frac{2}{3}$.
+
+\bigskip
+The sample error is then computed as:
+\begin{equation}
+	\text{error}_{S}(h) = \frac{1}{|S|}\sum_{x \in S} \delta(f(x) \ne h(x)).
 \end{equation}
-is ideal to choose $T$ and $S$ such that they have similar probability distribution over the features, in this case the random variable $\text{error}_{ S}$ is an unbiased estimator for the true error $\text{error}_{ \mathcal D}$.
+
+It is ideal to choose $T$ and $S$ such that they are drawn from the same underlying distribution over the features.  
+In that case, the random variable $\text{error}_{S}(h)$ is an \textbf{unbiased estimator} of the true error $\text{error}_{\mathcal D}(h)$.
+
+\bigskip
 \subsection{The Cross Validation Algorithm and others Performance Metrics}
 There exists an algorithm to estimate the expected value of the sample error, more the dataset $D$ is large, more the estimation will be precise.
 The algorithm \ref{alg:CrossVal} estimate the expected value of the error, with $L$ is denoted a fixed learning algorithm:\begin{itemize}
