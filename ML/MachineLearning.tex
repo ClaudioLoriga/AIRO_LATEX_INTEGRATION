@@ -323,7 +323,7 @@ A useful \textit{special case} is known as \textbf{concept learning}, where both
 	 & Y = \{0,1\}
 \end{align*}
 
-In concept learning, the output consists in only two classes, the target function $c:X\rightarrow\{0,1\}$ maps  any kind of input in one of two distinct values. The following example model a program that predict if is a good day to play Tennis, the input set is $$
+In concept learning, the output consists in only two classes, the target function $c:X\rightarrow\{0,1\}$ maps any kind of input in one of two distinct values. The following example model a program that predict if is a good day to play Tennis, the input set is $$
 	X=Day\times Outlook \times Temperature \times Humidity \times Wind
 $$
 the output set is $PlayTennis=\{\text{Yes, No}\}$. An example of data samples:\begin{center}
@@ -351,7 +351,8 @@ the output set is $PlayTennis=\{\text{Yes, No}\}$. An example of data samples:\b
 
 \newpage
 \bigskip
-Finally, classification problems are often referred to as \textit{pattern recognition problems}, since their purpose is to identify the category or pattern to which a specific instance belongs.
+Finally, classification problems are often referred to as \textit{pattern recognition problems},
+since their purpose is to identify the category or pattern to which a specific instance belongs.
 
 \bigskip
 Some examples are:\begin{itemize}
@@ -363,93 +364,176 @@ Some examples are:\begin{itemize}
 
 \bigskip
 \section{Performance Evaluation}
-Usually, we call \textbf{Hypothesis} a possible learned function $h$, and we define $H$ as the \textbf{Hypothesis space}, such space contains all possible function that can be learnt (all possible approximation of the target function). In this terms, a learning problem is described as a search in the hypothesis space using the given dataset $D$, that aims to find the best possible approximation $h^*$:\begin{equation}\label{sol_hypothesis}
+
+Usually, we call \textbf{Hypothesis} a possible learned function $h$, and we define $H$ as the \textbf{Hypothesis space}, such space contains all possible function that can be learnt (all possible approximation of the target function). In this terms, a \textbf{learning problem} is described as a search in the hypothesis space using the given dataset $D$, that aims to find the best possible approximation $h^*$:
+
+\begin{equation}\label{sol_hypothesis}
 	h^*=\arg \max_{h\in H} Performance(h,D)
 \end{equation}
+
+\bigskip
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.35\textwidth]{images/HypotesisSpace.png}
+	\caption{An Hypothesis in the Hypothesis Space}
+	\label{img:HypothesisSpace}
+\end{figure}
+
 \subsection{Concept Learning}
-We focus now on the concept learning (binary classification), let's consider a target function\begin{equation}
-	c:X\rightarrow \{0,1\}
+
+We now focus on \textbf{concept learning}, which corresponds to the special case of binary classification.
+
+\bigskip
+Let the target function be
+\begin{equation}
+	c : X \rightarrow \{0,1\}.
 \end{equation}
-let $D\subset \{X,Y\}$ to be the sample set\begin{equation}
-	D=\bigcup_{i=1}^n\{(x_i,c(x_i))\}
+
+We are given a dataset
+\begin{equation}
+	D = \bigcup_{i=1}^{n} \{(x_i, c(x_i))\},
 \end{equation}
-we denote $X_D$ the point of $X$ in the sample set. For now, we assume that the sample set does not have noise:\begin{itemize}
-	\item noise dataset $D=\bigcup_{i=1}^n\{(x_i,c(x_i)+\varepsilon_i)\}, \ \ \varepsilon_i\in\R$
-	\item perfect dataset $D=\bigcup_{i=1}^n\{(x_i,c(x_i))\}$
-\end{itemize}
-in general, the dataset is noisy. We want to find a function $\hat f$ that approximate $c$, as we just said, the hypothesis space $H$ is the set of all hypothesis $h$.\bigskip
-Each hypothesis is a possible solution to the problem \eqref{sol_hypothesis},  it is possible to compare an hypothesis  $h$ with $c$ on a sample in $X_D$.
+where each example $(x_i, c(x_i))$ pairs an input $x_i \in X$ with its corresponding label $c(x_i)$, as defined by the unknown concept $c$. We denote by $X_D$ the set of input points that appear in the dataset.
+
+\bigskip
+In an ideal scenario, all training examples are labeled correctly — we call such a dataset \textbf{noise-free} or \textbf{perfect}:
+\[
+D_{\text{perfect}} = \bigcup_{i=1}^n \{(x_i, c(x_i))\}.
+\]
+
+However, in practice data are often affected by \textbf{noise}, meaning that some labels or features may be incorrect, uncertain, or perturbed by random variation. We can represent this as:
+\[
+D_{\text{noisy}} = \bigcup_{i=1}^n \{(x_i, c(x_i) + \varepsilon_i)\}, \qquad \varepsilon_i \in \mathbb{R}.
+\]
+
+Here, $\varepsilon_i$ represents the \textbf{noise term}, which can arise from measurement errors, subjective labeling, missing information, or inherent randomness in the process that generated the data. Noise introduces ambiguity because the same input $x_i$ might be associated with inconsistent labels in different samples.
+
+\bigskip
 \begin{definition}
-	Given a target function $c$ and a set of sample point $X_D$, an hypothesis $h$ is \textbf{consistent} if\begin{equation}
-		h(x)=c(x), \ \ \forall x\in X_D.
-	\end{equation}
+Given a target function $c$ and a set of sample points $X_D$, a hypothesis $h$ is said to be \textbf{consistent} with the training data if
+\[
+h(x) = c(x), \quad \forall x \in X_D.
+\]
 \end{definition}
+
+In other words, a consistent hypothesis correctly classifies all examples in the training dataset.
+When the dataset is noise-free, it is usually possible to find one or more consistent hypotheses within $H$.
+However, in the presence of noise, perfect consistency may be impossible — in such cases, learning algorithms aim to find the \emph{most consistent} or \emph{best-fitting} hypothesis, minimizing the number of classification errors rather than eliminating them entirely.
+
+\bigskip
 The \textbf{Version Space} $VS_{H,D}$ is the set of all consistent hypothesis:\begin{equation}
 	VS_{H,D}=\{h \ : \ h(x)=c(x), \ \ \forall x\in X_D\}\subset H.
 \end{equation}
 A solution that does not lie in the version space is probably not a good solution.\bigskip
 
-Let's consider an example, let $c$ to be the following target function\begin{equation}
-	c:\N\rightarrow\{-,+\}
+\bigskip
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.35\textwidth]{images/VersionSpace.png}
+	\caption{A Version Space in the Hypothesis Space}
+	\label{img:VersionSpace}
+\end{figure}
+
+\subsection{Overfitting and Underfitting}
+
+Let's consider an example. Let $c$ be the following target function:
+\begin{equation}
+	c:\N\rightarrow\{-,+\}.
 \end{equation}
-the dataset is\begin{equation}
-	D=\{(1,+),(3,+),(5,+),(6,-),
-	(8,-),(10,-)\}
+The dataset is given by:
+\begin{equation}
+	D=\{(1,+),(3,+),(5,+),(6,-),(8,-),(10,-)\}.
 \end{equation}
-given the hypothesis space $H$, we consider four different hypothesis\begin{align*}
-	 & h_1(n)=+\iff n\text{ is odd}               \\
-	 & h_2(n)=+\iff n\le 5                        \\
-	 & h_3(n)=+\iff n\text{ is either 1 or prime} \\
-	 & h_4(n)=+\iff n\in\{1,3,5\}
+
+Given a hypothesis space $H$, consider the following four hypotheses:
+\begin{align*}
+	 & h_1(n)=+\iff n\text{ is odd},\\
+	 & h_2(n)=+\iff n\le 5,\\
+	 & h_3(n)=+\iff n\text{ is either 1 or prime},\\
+	 & h_4(n)=+\iff n\in\{1,3,5\}.
 \end{align*}
-if $n=11$ we have\begin{align*}
-	 & h_1(11)=+ \\
-	 & h_2(11)=- \\
-	 & h_3(11)=+ \\
-	 & h_4(11)=-
+
+If $n=11$, then:
+\begin{align*}
+	 & h_1(11)=+,\\
+	 & h_2(11)=-,\\
+	 & h_3(11)=+,\\
+	 & h_4(11)=-.
 \end{align*}
-we can't tell which of the four hypothesis is better than the others. Let's now consider a new hypothesis space $H'$, defined as the power set of $H$\begin{equation}
-	H'=\mathcal P(H)=\{I \ : \ I\subseteq H\}
+
+The problem is that we cannot tell which of the four hypotheses is “better.”  
+They all fit the training data equally well, but they generalize differently on unseen examples.
+
+\bigskip
+Now, consider an expanded hypothesis space $H'$, defined as the power set of $H$:
+\begin{equation}
+	H'=\mathcal P(H)=\{I \mid I\subseteq H\}.
 \end{equation}
-The set $H'$ contains more information than $H$, let $\theta\in H'$, we define the value of $\theta$ on $x$ in a different way\begin{align}
-	 & \theta = \bigcup_i\{h_i\}               \\
-	 & \theta(x)=\text{maj}\bigcup_i\{h_i(x)\}
+The set $H'$ contains more information than $H$. For $\theta \in H'$, we define:
+\begin{align}
+	\theta &= \bigcup_i\{h_i\},\\
+	\theta(x)&=\operatorname{maj}\bigcup_i\{h_i(x)\},
 \end{align}
-where the function maj returns the element that is more frequent in a set. It's important to know that, if you have a set where two different items appear the exact same number of times, and no other item appears more often than either of them, then the majority element can't be identified, and the value of the function maj is undefined.\bigskip
+where the function $\operatorname{maj}$ returns the most frequent label in the set.  
+If two labels occur with the same frequency, $\operatorname{maj}$ is undefined.
 
-With the hypothesis space $H'$, the point $n=11$ can't be classified\begin{equation}
-	\theta(11)=\text{maj}\{h_1(11),h_2(11),h_3(11),h_4(11)\}=\text{maj}\{+,-,+,-\}.
+\bigskip
+For instance, at $n=11$:
+\begin{equation}
+	\theta(11)=\operatorname{maj}\{h_1(11),h_2(11),h_3(11),h_4(11)\}=\operatorname{maj}\{+,-,+,-\},
 \end{equation}
-Even if $H'$ is more powerful than $H$, this hypothesis space can't classify an element that can be classified in $H$, this problem is called overfitting.\bigskip
+so the classification is undefined.
 
-Now let's consider the following target function\begin{equation}
-	c:\N^2\rightarrow\{+,-\}
+\bigskip
+This means that even though $H'$ is more expressive than $H$, it fails to generalize: it cannot classify a point that $H$ could classify.  
+This situation is known as \textbf{overfitting}: the hypothesis space is too rich, leading to instability and poor generalization.
+
+\bigskip
+Now consider another target function:
+\begin{equation}
+	c:\N^2\rightarrow\{+,-\},
 \end{equation}
-with the following dataset $D$ that can be plotted on a 2D plane:\begin{center}
+with a dataset $D$ plotted on a 2D plane:
+
+\begin{center}
 	\includegraphics[width=0.25\textwidth]{images/N2_hypothesis_1.eps}
 \end{center}
-We consider $H$ as the set of the functions that, assigns at all the points in a specific rectangle the $+$ value, and the $-$ value for all the points outside.
-\begin{eqnarray*}
-	h\in H \iff\Big( \exists R:=\{(x,y) \ : \ a\le x\le b\land c\le y\le d\} : h(x,y)=+\iff (x,y)\in R\Big )
-\end{eqnarray*}
-For that data samples, does not exists a consistent hypothesis, because does not exists a rectangle that contains all the $+$ value point, letting outside the $-$ value points.
+
+Let $H$ be the set of functions that assign the label $+$ to all points within a rectangle $R$ and $-$ otherwise:
+\begin{equation}
+	h\in H \iff \Big( \exists R=\{(x,y): a\le x\le b,\ c\le y\le d\} \text{ such that } h(x,y)=+ \iff (x,y)\in R \Big).
+\end{equation}
+
+In this case, no consistent hypothesis exists in $H$, because no single rectangle can include all $+$ points while excluding all $-$ points:
+
 \begin{center}
 	\includegraphics[width=0.6\textwidth]{images/N2_hypothesis_2.eps}
 \end{center}
-If we consider the hypothesis space $H'=\mathcal P(H)$, geometrically, we can represent a function by a finite number of rectangles, in this case consistent hypothesis are allowed, but no $-$ value points can be predicted.
+
+If we extend the hypothesis space to $H'=\mathcal P(H)$, we can represent a function using multiple rectangles.  
+Now consistent hypotheses exist, but the model becomes too specific and fails to generalize — predicting $+$ almost everywhere:
+
 \begin{center}
 	\includegraphics[width=0.25\textwidth]{images/N2_hypothesis_3.eps}
 \end{center}
-Even in this example, a powerful representation of the hypothesis space lead to less generalization. This is known (as previously said) as \textbf{overfitting}, when the hypothesis space is not powerful enough, the problem could not be represented well, this is known as \textbf{underfitting}.\bigskip
 
-If $n$ is a number that determines how big an hypothesis space, we can observe the following trend about the performance of a model.
+This illustrates the trade-off between model complexity and generalization ability:
+\begin{itemize}
+	\item A \textbf{too simple} hypothesis space cannot capture the true concept (\textbf{underfitting});
+	\item A \textbf{too complex} hypothesis space fits the training data perfectly but fails to generalize (\textbf{overfitting}).
+\end{itemize}
+
+\bigskip
+If $n$ measures the “size” or expressive power of the hypothesis space, we can observe the following trend in model performance:
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.65\textwidth]{images/fitting.eps}
-	\caption{overfitting and underfitting trend}
+	\caption{The trade-off between underfitting and overfitting.}
 	\label{img:fitting_trend}
 \end{figure}
+
+As model complexity increases, training error decreases, but test error eventually rises after a certain point — showing that the best hypothesis is not the most complex one, but the one that achieves the right balance between fit and generalization.
 
 \subsection{Error Estimation and Performance Metric}
 We want to define a metric for the performance of a model, to estimate how a given hypothesis $h$ is good respect to the others. We have to introduce some statistical methods, let's consider a target function\begin{equation}
