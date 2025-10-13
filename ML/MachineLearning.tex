@@ -623,16 +623,16 @@ An estimator is said to be \textbf{unbiased} if its expected value equals the qu
 \end{equation}
 
 \bigskip
-If we compute the sample error on the same data used to train the hypothesis $h$, the resulting estimate is typically \emph{optimistically biased} — the model performs better on familiar examples than on unseen ones.  
+If we compute the sample error on the same data used to train the hypothesis $h$, the resulting estimate is typically \emph{optimistically biased} — the model performs better on familiar examples than on unseen ones.
 To obtain an unbiased estimate of the true error, we must evaluate $h$ on data that were not used during training.
 
 \bigskip
 Let $D$ be the available dataset. We split it into two disjoint subsets:
 \begin{align}
-	 & D = T \cup S, \\
+	 & D = T \cup S,         \\
 	 & T \cap S = \emptyset,
 \end{align}
-where $T$ (the \textbf{training set}) is used to learn the hypothesis $h$, and $S$ (the \textbf{test set}) is used to estimate its performance.  
+where $T$ (the \textbf{training set}) is used to learn the hypothesis $h$, and $S$ (the \textbf{test set}) is used to estimate its performance.
 Typically, $\frac{|T|}{|D|} \simeq \frac{2}{3}$.
 
 \bigskip
@@ -641,13 +641,13 @@ The sample error is then computed as:
 	\text{error}_{S}(h) = \frac{1}{|S|}\sum_{x \in S} \delta(f(x) \ne h(x)).
 \end{equation}
 
-It is ideal to choose $T$ and $S$ such that they are drawn from the same underlying distribution over the features.  
+It is ideal to choose $T$ and $S$ such that they are drawn from the same underlying distribution over the features.
 In that case, the random variable $\text{error}_{S}(h)$ is an \textbf{unbiased estimator} of the true error $\text{error}_{\mathcal D}(h)$.
 
 \bigskip
 \subsection{The Cross Validation Algorithm and Other Performance Metrics}
 
-Estimating a model’s true error from limited data can be unreliable, since a single train–test split may depend heavily on which samples are chosen.  
+Estimating a model’s true error from limited data can be unreliable, since a single train–test split may depend heavily on which samples are chosen.
 To obtain a more stable and statistically sound estimate, we can use \textbf{cross-validation}, which averages results over multiple train/test partitions.
 
 \bigskip
@@ -697,19 +697,21 @@ Cross-validation can also be used to compare two learning algorithms, $L_a$ and 
 A positive value of $\bar{\delta}$ indicates that $L_b$ performs better on average, while a negative value favors $L_a$.
 
 \bigskip
-\textbf{Remarks.}
+\textbf{Remarks (Optional).}
 \begin{itemize}
 	\item Typical values for $k$ are $5$ or $10$: smaller $k$ reduces computation, larger $k$ reduces variance.
 	\item The special case $k = |D|$ corresponds to \textbf{leave-one-out cross-validation (LOOCV)}.
 	\item When class proportions must be preserved across folds, we use \textbf{stratified cross-validation}.
 \end{itemize}
 
+\bigskip
 Now that we defined the sample error, we can give a formal definition of overfitting. Let $h$  to be an hypothesis for a model, $h$ is overfitting is exists an hypothesis $h'$ such that\begin{align}
-	 & \text{error}_{S}(h)<\text{error}_{S}(h')               \\ &\land\\
-	 & \text{error}_{\mathcal D}(h)>\text{error}_{\mathcal D}
+	 & \text{error}_{S}(h)<\text{error}_{S}(h')                   \\ &\land\\
+	 & \text{error}_{\mathcal D}(h)>\text{error}_{\mathcal D}(h')
 \end{align}
 
-Let's consider other performance metrics in binary classification. Let $f:X\rightarrow\{-,+\}$ to be the target function ad let $D$ to be a sample set such that, $90\%$ of elements in $D$ is of class $+$. An hypothesis that always returns $+$ will have an accuracy of $90\%$, in this scenario the dataset is unbalanced, so the accuracy is not a good performance metric for the model. We can consider a table that counts the number of points in the sample set that are well classified or misclassified by an hypothesis:\begin{center}
+Let's consider other performance metrics in binary classification. Let $f:X\rightarrow\{-,+\}$ to be the target function ad let $D$ to be a sample set such that, $90\%$ of elements in $D$ is of class $+$. An hypothesis that always returns $+$ will have an accuracy of $90\%$, in this scenario the dataset is \textbf{unbalanced}, so the accuracy is not a good performance metric for the model. We can consider a table that counts the number of points in the sample set that are well classified or misclassified by an hypothesis:
+\begin{center}
 	\begin{tabular}{c|cc|}
 		\cline{2-3}
 		                                 & \multicolumn{2}{c|}{predicted class}                  \\ \hline
@@ -726,7 +728,11 @@ we can define two additional metrics that is useful when we deal with binary cla
 		      \frac{\text{true positive}}{\text{true positive}+\text{false positive}}
 	      \end{equation}
 \end{itemize}
-the importance of these metrics depend on the application.
+The importance of these metrics depend on the application.
+
+\newpage
+For the classification problems we can define an extension of the previous table, called \textbf{confusion matrix}, and report how many instances of class $C_i$ are classified in class $C_j$, the main diagonal contains the accuracy for each class. An example is shown in figure \ref{img:conf_matrix}.
+
 \bigskip
 \begin{figure}[h!]
 	\centering
@@ -734,8 +740,6 @@ the importance of these metrics depend on the application.
 	\caption{an example of a confusion matrix}
 	\label{img:conf_matrix}
 \end{figure}\bigskip
-
-For the classification problems we can define an extension of the previous table, called \textbf{confusion matrix}, and report how many instances of class $C_i$ are classified in class $C_j$, the main diagonal contains the accuracy for each class. An example is shown in figure \ref{img:conf_matrix}.\bigskip
 
 We consider now some performance metrics for the regression problems. Let $f:X\rightarrow\R^d$ to be the target function, and let $\hat f$ to be the learned function, for each sample $(x_i,f(x_i))$ in the dataset, we can compute the euclidian distance\begin{equation}
 	|\hat f(x_i)-f(x_i)|.
