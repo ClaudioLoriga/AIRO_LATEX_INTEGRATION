@@ -1367,7 +1367,7 @@ the \textbf{Inference by Enumeration} formula states that, the probability that 
 
 \subsection{Conditional Probability and Bayes' Theorem}
 
-In many real-world problems, we are not interested in the probability of an event occurring in isolation, but rather in the probability of one event \emph{given} that another has occurred.  
+In many real-world problems, we are not interested in the probability of an event occurring in isolation, but rather in the probability of one event \emph{given} that another has occurred.
 This leads to the concept of \textbf{conditional probability}.
 
 \begin{definition}
@@ -1387,20 +1387,21 @@ This definition allows us to update our belief about $A$ once we know that $B$ h
 	\end{equation}
 \end{theorem}
 
-Bayes’ theorem provides a way to \textit{invert} conditional probabilities — i.e., to compute $\Prob(A|B)$ in terms of $\Prob(B|A)$.  
+Bayes’ theorem provides a way to \textit{invert} conditional probabilities — i.e., to compute $\Prob(A|B)$ in terms of $\Prob(B|A)$.
 This is fundamental in machine learning, where we often want to infer the probability of a \emph{hidden cause} (e.g., a class label or model parameter) given an \emph{observed effect} (e.g., data).
 
 \bigskip
-\textbf{Example intuition.}  
-If $A$ represents “the email is spam” and $B$ represents “the email contains the word ‘discount’,” then $\Prob(B|A)$ is easy to estimate (how often spam emails mention “discount”),  
+\textbf{Example intuition.}
+If $A$ represents “the email is spam” and $B$ represents “the email contains the word ‘discount’,” then $\Prob(B|A)$ is easy to estimate (how often spam emails mention “discount”),
 while $\Prob(A|B)$ — the probability that an email is spam given that it contains “discount” — can be inferred using Bayes’ theorem.
 
 \bigskip
 \subsection{Likelihood and the Maximum Likelihood Principle}
 
-In machine learning and statistics, we often deal with random variables $X$ and $Y$, where $X$ represents the unknown parameter or cause, and $Y$ represents the observed data.  
+In machine learning and statistics, we often deal with random variables $X$ and $Y$, where $X$ represents the unknown parameter or cause, and $Y$ represents the observed data.
 Given an observation $Y = y_i$, we want to determine which value of $X$ is most likely responsible for it.
 
+\bigskip
 The \textbf{likelihood function} of $X$ given an observation $y_i$ is defined as:
 \begin{equation}
 	\mathcal{L}(x) = \Prob(Y = y_i | X = x),
@@ -1413,50 +1414,91 @@ The \textbf{maximum likelihood estimate (MLE)} seeks the value of $x$ that maxim
 	\hat{x}_{ML} = \arg\max_x \Prob(X = x | Y = y_i) = \arg\max_x \frac{\Prob(Y = y_i | X = x)\Prob(X = x)}{\Prob(Y = y_i)}.
 \end{equation}
 
-If all possible values of $X$ are assumed to be equally likely (uniform prior), then $\Prob(X=x)$ is constant and can be ignored.  
+If all possible values of $X$ are assumed to be equally likely (uniform prior), then $\Prob(X=x)$ is constant and can be ignored.
 Since $\Prob(Y=y_i)$ is also constant with respect to $x$, we obtain:
 \begin{equation}
 	\hat{x}_{ML} = \arg\max_x \Prob(Y = y_i | X = x).
 \end{equation}
 
 \noindent
-This is the essence of the \textbf{Maximum Likelihood Principle}:  
+This is the essence of the \textbf{Maximum Likelihood Principle}:
 \begin{quote}
 	Choose the parameters or hypotheses that make the observed data most probable.
 \end{quote}
 
-\bigskip
-In later chapters (e.g., Bayesian Learning and Parameter Estimation), this principle will appear frequently.  
-It provides the foundation for many models, such as logistic regression, Naive Bayes, and neural networks trained via loss minimization.
-
-
-\bigskip
 \section{Bayesian Learning}
-We want to use a probabilistic approach to model a machine learning problem, the methods presented in this section are surprisingly precise. Let's consider a target function for a classification problem\begin{equation}
-	f:X\rightarrow V
+
+The Bayesian approach introduces a probabilistic framework for learning, in which uncertainty about hypotheses and predictions is represented explicitly through probabilities.  
+Instead of committing to a single “best” model derived only from data, Bayesian learning updates our belief about all possible hypotheses as new evidence is observed, represented in a distribution.
+
+\bigskip
+\noindent
+Consider a classification problem defined by a target function:
+\begin{equation}
+	f : X \rightarrow V,
 \end{equation}
-where $V$ is a finite set of classes, we define \begin{align}
-	 & \Prob(v|x,D) \\ &\in X, v\in V
-\end{align}
-the probability that $v$ is equal to $f(x)$ given the dataset $D$. Our goal is to define the learned function as follows\begin{equation}
-	\hat f(x)=\arg\max_{v\in V}\Prob(v|x,D)=v^*\in V
+where $V$ is a finite set of possible classes.  
+For each instance $x \in X$, and a given dataset $D$, we are interested in the probability
+\begin{equation}
+	\Prob(v | x, D), \qquad v \in V,
 \end{equation}
-In general, we would like to compute the whole distribution on $V$\begin{equation}
-	\Prob(v|x,D), \ \ \forall v\in V.
+that the correct label of $x$ is $v$ given the evidence provided by $D$.  
+The learned function can therefore be defined as:
+\begin{equation}
+	\hat f(x) = \arg\max_{v \in V} \Prob(v | x, D) = v^*,
 \end{equation}
-We define\begin{equation}
-	\Prob(h|D)
+that is, we predict the class with the highest posterior probability.  
+In general, it may be useful to compute the entire distribution $\Prob(v | x, D)$ for all $v \in V$, as it reflects our confidence in each possible classification.
+
+\bigskip
+\subsection{Posterior Probability over Hypotheses}
+
+To model how data affect our confidence in each hypothesis, we define:
+\begin{equation}
+	\Prob(h | D),
 \end{equation}
-the probability that an hypothesis $h\in H$ is the optimal solution for the problem knowing that $D$ is the dataset. Applying the Bayes rule we get\begin{equation}
-	\Prob(h|D)=\frac{\Prob(D|h)\Prob(h)}{\Prob(D)}
+the probability that a hypothesis $h \in H$ is correct given the observed dataset $D$.  
+Applying Bayes’ theorem:
+\begin{equation}
+	\Prob(h | D) = \frac{\Prob(D | h)\Prob(h)}{\Prob(D)}.
 \end{equation}
-$\Prob(h)$ is the probability that an hypothesis $h\in H$ is the optimal solution without knowing anything about the dataset, if the hypothesis space  $H$ is finite, $\Prob(h)=\frac{1}{|H|}$. We define the \textbf{Maximum a Posteriori Hypothesis} as follows:\begin{equation}
-	h_{MAP}=\arg\max_{h\in H}\Prob(h|D)= h_{MAP}=\arg\max_{h\in H}\frac{\Prob(D|h)\Prob(h)}{\Prob(D)}= h_{MAP}=\arg\max_{h\in H}\Prob(D|h)\Prob(h)
+
+\begin{itemize}
+	\item $\Prob(h)$ — the \textbf{prior probability}: our belief in $h$ before observing any data.
+	\item $\Prob(D | h)$ — the \textbf{likelihood}: how probable the data $D$ are if hypothesis $h$ were true.
+	\item $\Prob(D)$ — the \textbf{evidence}: a normalizing constant ensuring probabilities sum to $1$.
+	\item $\Prob(h | D)$ — the \textbf{posterior probability}: our updated belief in $h$ after observing $D$.
+\end{itemize}
+
+\noindent
+Bayesian learning can therefore be summarized as:
+\[
+	\text{posterior} \propto \text{likelihood} \times \text{prior}.
+\]
+This principle expresses how learning combines prior knowledge with new observations.
+
+\bigskip
+\subsection{The Maximum a Posteriori (MAP) Hypothesis}
+
+In practice, it is often infeasible to compute or store the entire posterior distribution over $H$.  
+A common approach is to select the most probable hypothesis according to the posterior:
+\begin{equation}
+	h_{MAP} = \arg\max_{h \in H} \Prob(h | D)
+	= \arg\max_{h \in H} \frac{\Prob(D | h)\Prob(h)}{\Prob(D)}
+	= \arg\max_{h \in H} \Prob(D | h)\Prob(h).
 \end{equation}
-the denominator $\Prob(D)$ can be removed since doesn't affect the output of the arg max function (since it is constant). Since at priori all hypothesis have the same probability, the value can be written as\begin{equation}
-	h_{MAP}=\arg\max_{h\in H}\Prob(D|h).
-\end{equation}
-We can make a brute force approach by computing $\Prob(D|h)$ for each $h\in H$ (if $h$ is finite).
+
+\noindent
+The denominator $\Prob(D)$ can be dropped, as it is constant with respect to $h$.  
+The resulting \textbf{Maximum a Posteriori} (MAP) estimate therefore finds the hypothesis that both fits the observed data and aligns with our prior expectations.  
+
+\bigskip
+If all hypotheses are equally likely a priori (i.e., the prior $\Prob(h)$ is uniform), the MAP estimate reduces to the maximum likelihood solution.  
+Thus, Bayesian learning generalizes maximum likelihood estimation by incorporating prior knowledge and explicitly reasoning about uncertainty.
+
+\bigskip
+This probabilistic viewpoint not only provides a principled way to handle noisy or incomplete data, but also forms the theoretical basis for models such as Naive Bayes classifiers, Bayesian networks, and Gaussian processes.
+
 \subsection{Bayes Optimal Classifier}
 $h_{MAP}$ is not necessary the optimal solution, let's consider $v_j\in V$, we can apply the total probability formula:\begin{equation}
 	\Prob(v_j|x,D)=\sum_{h_i\in H}\Prob(v_j|x,h_i,D)\Prob(h_i|x,D)
