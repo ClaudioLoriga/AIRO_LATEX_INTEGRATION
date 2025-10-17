@@ -1165,58 +1165,101 @@ There are other algorithms based on decision trees:\begin{itemize}
 \end{itemize}
 
 \chapter{Probabilistic Models}
+
 \section{Probability Recap}
-Consider the following action\begin{equation}
-	A_t=\text{ leave the house $t$ minutes before the flight}
+
+Consider the following action:
+\begin{equation}
+	A_t = \text{ leave the house $t$ minutes before the flight.}
 \end{equation}
-If we apply this action, what will be the answer to the question\begin{quote}
-	The action $A_t$ will it get me there on time?
+
+If we apply this action, what will be the answer to the question:
+\begin{quote}
+	Will the action $A_t$ get me to the airport on time?
 \end{quote}
-The answer can't be a simple \textit{Yes} or \textit{No}, because depends from a series of casual factors that are unpredictable (such as the traffic reports, or a possible flat tire). The probability is needed to represents the uncertainties:\begin{itemize}
-	\item Given the available evidence, $A_{25}$ will get me at the airport on time with
-	      probability 0.04
-	\item Given the available evidence, $A_{60}$ will get me at the airport on time with
-	      probability 0.84
-	\item Given the available evidence, $A_{1440}$ will get me at the airport on time with
-	      probability 0.999.
+
+The answer cannot be a simple \textit{Yes} or \textit{No}, since it depends on several uncertain factors (traffic conditions, accidents, weather, etc.).
+
+\smallskip
+\textbf{Probability} provides a way to represent and reason about such uncertainty:
+\begin{itemize}
+	\item Given the available evidence, $A_{25}$ will get me to the airport on time with probability $0.04$;
+	\item Given the available evidence, $A_{60}$ with probability $0.84$;
+	\item Given the available evidence, $A_{1440}$ (leaving one day early) with probability $0.999$.
 \end{itemize}
-In this context, the set of \textit{all possible elementary events} that can occurs is called \textbf{Sample Space}, and is usually denoted $\Omega$.
+
+In this context, the set of all possible outcomes of an experiment is called the \textbf{sample space}, denoted by $\Omega$.
+Each element $\omega \in \Omega$ represents one possible elementary event (a specific configuration of outcomes).
+
 \begin{definition}
-	A \textbf{Discrete Probability Space} is a tuple $(\Omega,\mathcal A,\Prob)$ where\begin{itemize}
-		\item $\Omega$ is the sample set of the elementary events.
-		\item $\mathcal A\subseteq\mathcal P(\Omega)$ is a $\sigma$-algebra, and contains all the events that can occurs, for which we can calculate a probability. $\mathcal A$ satisfies the following properties:\begin{itemize}
-			      \item $\Omega\in\mathcal A$
-			      \item $A\in\mathcal A\implies A^C=\Omega\backslash A\in \mathcal A$
-			      \item if $\{A_i\}\subset\mathcal A$ is a countable sequence of events, then $\bigcup_i\{A_i\}\in\mathcal A$.
+	A \textbf{Discrete Probability Space} is a tuple $(\Omega, \mathcal A, \Prob)$ where:
+	\begin{itemize}
+		\item $\Omega$ is the sample set of elementary events;
+		\item $\mathcal A \subseteq \mathcal P(\Omega)$ is a \textbf{$\sigma$-algebra}, i.e. the collection of all events for which a probability can be defined.
+		      It satisfies:
+		      \begin{itemize}
+			      \item $\Omega \in \mathcal A$
+			      \item $A \in \mathcal A \implies A^C = \Omega \setminus A \in \mathcal A$
+			      \item if $\{A_i\} \subset \mathcal A$ is countable, then $\bigcup_i A_i \in \mathcal A$.
 		      \end{itemize}
-		\item $\Prob$ is the \textbf{probability measure}, is a function $\Prob:\mathcal A\rightarrow[0,1]$ that assigns a probability to each event in $\mathcal A$ and satisfies the following properties:\begin{itemize}
-			      \item $\Prob(\Omega)=\displaystyle\sum_{\omega\in\Omega}\Prob(\{\omega\})=1$
-			      \item if $\{A_i\}$ is a countable collection of disjoint sets in $\mathcal A$, then\begin{equation}
-				            \Prob\left(\bigcup_{i}A_i\right)=\sum_i\Prob(A_i).
+		\item $\Prob$ is the \textbf{probability measure}, a function $\Prob: \mathcal A \rightarrow [0,1]$ that assigns a probability to each event and satisfies:
+		      \begin{itemize}
+			      \item $\Prob(\Omega) = \displaystyle\sum_{\omega \in \Omega} \Prob(\{\omega\}) = 1$
+			      \item for any countable collection of disjoint events $\{A_i\}$:
+			            \begin{equation}
+				            \Prob\left(\bigcup_i A_i\right) = \sum_i \Prob(A_i).
 			            \end{equation}
 		      \end{itemize}
 	\end{itemize}
 \end{definition}
+
+\bigskip
+Intuitively, a probability space provides the formal structure for describing randomness:
+$\Omega$ defines what can happen, $\mathcal A$ defines what we can measure, and $\Prob$ tells us how likely each event is.
+
 \begin{definition}
-	Given a probability space $(\Omega,\mathcal A,\Prob)$, a \textbf{random variable} is a function $X:\Omega\rightarrow Y$.
+	Given a probability space $(\Omega, \mathcal A, \Prob)$, a \textbf{random variable} is a function
+	\[
+		X : \Omega \rightarrow Y,
+	\]
+	that assigns a numerical or categorical value to each possible outcome $\omega \in \Omega$.
 \end{definition}
-The probability $\Prob$ induces a \textit{probability distribution} on a random variable $X$:\begin{equation}
-	\Prob(X=x_i)=\sum_{\omega\in\Omega \ : \ X(\omega)=x_i}\Prob(\omega).
+
+\noindent
+The probability measure $\Prob$ induces a \textbf{probability distribution} on the values of $X$:
+\begin{equation}
+	\Prob(X = x_i) = \sum_{\omega \in \Omega \, : \, X(\omega) = x_i} \Prob(\omega),
 \end{equation}
+that is, the probability that $X$ takes value $x_i$ is the sum of probabilities of all events leading to that outcome.
+
+\bigskip
 \begin{definition}
-	Given a probability space $(\Omega,\mathcal A,\Prob)$ a \textbf{proposition} $a$ is an event in $\mathcal A$, associated with a random variable $A:\Omega\rightarrow\{True,False\} $ such that\begin{equation}
-		a := A \text{ is } True := \{\omega\in\Omega \ : \ A(\omega)=True\}.
-	\end{equation}
+	Given a probability space $(\Omega, \mathcal A, \Prob)$, a \textbf{proposition} $a$ is an event in $\mathcal A$, associated with a random variable
+	\[
+		A : \Omega \rightarrow \{True, False\}
+	\]
+	such that
+	\[
+		a := A \text{ is True} := \{\omega \in \Omega \, : \, A(\omega) = True\}.
+	\]
 \end{definition}
-We can use the first order logic to combine and operates on propositions\begin{align}
-	 & \lnot a := A \text{ is } False := \{\omega\in\Omega \ : \ A(\omega)=False\}                                                      \\
-	 & a\land b := A \text{ and } B \text{ is } True :=\{\omega\in\Omega \ : \ A(\omega)=B(\omega)=True\}                               \\
-	 & \lnot a\lor b := A \text{ is }False\text{ or } B \text{ is } True :=\{\omega\in\Omega \ : \ A(\omega)=False\lor B(\omega)=True\}
+
+\noindent
+Propositions correspond to logical statements about the world (e.g., “the flight is on time”).
+We can combine them using logical connectives:
+\begin{align}
+	 & \lnot a := A \text{ is False} := \{\omega \in \Omega : A(\omega) = False\}                                     \\
+	 & a \land b := A \text{ and } B \text{ are True} := \{\omega : A(\omega)=B(\omega)=True\}                        \\
+	 & \lnot a \lor b := A \text{ is False or } B \text{ is True} := \{\omega : A(\omega)=False \lor B(\omega)=True\}
 \end{align}
-Since a proposition is an element of $\mathcal A$, we can calculate the probability:\begin{equation}
-	\Prob(\lnot a\lor b)=\sum_{\omega\in\Omega \ : \ A(\omega)=False\lor B(\omega)=True}\Prob(\omega)
+
+Since each proposition is an event, we can compute its probability:
+\begin{equation}
+	\Prob(\lnot a \lor b) = \sum_{\omega \in \Omega : A(\omega)=False \lor B(\omega)=True} \Prob(\omega).
 \end{equation}
-The Definition \ref{def:prob_distr} refers to a probability distribution, if $X:\Omega\rightarrow Y$ is a random variable, the probability distribution $\mathcal D$ assigns a probability to each element in $\mathcal P(Y)$.\bigskip
+
+\bigskip
+Finally, recall that the probability distribution $\mathcal D$ defined in Definition~\ref{def:prob_distr} can also be interpreted as the distribution \emph{induced} by a random variable $X:\Omega \to Y$, assigning a probability to each possible value in $\mathcal P(Y)$.
 
 We will give now an example of a probability space. Let's consider the rolling of a dice, in this case we have\begin{itemize}
 	\item the sample set $\Omega=\{1,2,3,4,5,6\}$
@@ -1225,51 +1268,75 @@ We will give now an example of a probability space. Let's consider the rolling o
 		      \forall\omega\in \Omega, \ \Prob(\{\omega\})=\frac{1}{6}.
 	      \end{equation}
 \end{itemize}
-The probability of getting an odd number is\begin{equation}
+
+The probability of getting an odd number is
+\begin{equation}
 	\Prob(\{1,3,5\})=\Prob(\{1\})+\Prob(\{3\})+\Prob(\{5\})=\frac{1}{2}
 \end{equation}
-Let's consider the following random variable\begin{align}
+
+Let's consider the following random variable
+\begin{align}
 	 & X:\Omega\rightarrow\{-20,30\}    \\
 	 & X(\omega)=30\iff\omega\in\{1,2\}
 \end{align}
-$X$ represents a gamble on the dice, if the result is less than 3, the player wins 30 euros, else, he loses 20 euros. The probability of winning is\begin{equation}
+
+$X$ represents a gamble on the dice, if the result is less than 3, the player wins 30 euros, else, he loses 20 euros. The probability of winning is
+\begin{equation}
 	\Prob(\{1,2\})=\frac{1}{3}.
 \end{equation}
+
 If we have $n$ random variables $\{X_i\}$, it is possible to consider the \textbf{joint probability distribution}, inducted by the joint probability function.
 
-Let $X_1,X_2$ to be two distinct random variables on two distinct probability spaces\begin{align}
+Let $X_1,X_2$ to be two distinct random variables on two distinct probability spaces
+\begin{align}
 	 & X_1:\Omega_1\rightarrow Y_1 \text{ for the space }(\Omega_1,\mathcal A_1,\Prob_1) \\
 	 & X_2:\Omega_2\rightarrow Y_2 \text{ for the space }(\Omega_2,\mathcal A_2,\Prob_2)
 \end{align}
-where $\mathcal D_1$ is the distribution on $X_1$ and $\mathcal D_2$ is the distribution on $X_2$, the joint distribution $\mathcal D$ is defined as follows:\begin{align}
+where $\mathcal D_1$ is the distribution on $X_1$ and $\mathcal D_2$ is the distribution on $X_2$, the joint distribution $\mathcal D$ is defined as follows:
+\begin{align}
 	 & \text{let }x_1\in Y_1, \ \ x_2\in Y_2                                                                                                 \\
 	 & \mathcal D(X_1=x_1, \ X_2=x_2)=\Prob(\{(\omega_1,\omega_2)\in\Omega_1\times\Omega_2 \ : \ X_1(\omega_1)=x_1\land X_2(\omega_2)=x_2\})
 \end{align}
-where $\Prob:\mathcal A_1\times\mathcal A_2\rightarrow[0,1]$ is the joint probability and defines the probability that two events from the different probability space occurs.\bigskip
+where $\Prob:\mathcal A_1\times\mathcal A_2\rightarrow[0,1]$ is the joint probability and defines the probability that two events from the different probability space occurs.
 
-If $a$ and $b$ are two events/propositions, we define the \textbf{conditional probability} as follows:\begin{equation}
+\bigskip
+If $a$ and $b$ are two events/propositions, we define the \textbf{conditional probability} as follows:
+\begin{equation}
 	\Prob(a|b)=\frac{\Prob(a\land b)}{\Prob(b)}, \ \ \text{if }\Prob(b)\ne0
 \end{equation}
-it represents the probability that $a$ occurs knowing that $b$ is true. The \textbf{product rule} holds:\begin{equation}
+it represents the probability that $a$ occurs knowing that $b$ is true.
+
+The \textbf{product rule} holds:
+\begin{equation}
 	\Prob(a,b)=\Prob(a\land b)=\Prob(a|b)\Prob(b)=\Prob(b|a)\Prob(a)
 \end{equation}
-The following equality is called \textbf{chain rule} and is needed to calculate the probability that multiple events $A_1,A_2\dots A_n$ occurs:\begin{align}
+
+The following equality is called \textbf{chain rule} and is needed to calculate the probability that multiple events $A_1,A_2\dots A_n$ occurs:
+\begin{align}
 	 & \Prob(A_1,A_2\dots A_n)=\prod_{i=1}^n\Prob(A_i|A_1,\dots A_{i-1})=
 	\\ &\prod_{i=1}^n\left( A_i|\bigcap_{j=1}^{i-1} A_j \right).
 \end{align}
-\textbf{Note}: We will use the following abuse of notation, if $\Prob$ is the probability function for a probability space $(\Omega,\mathcal A,\Prob)$, and $X$ is a random variable on $\Omega$, we use the same symbol $\Prob$ to denote a probability distribution on $X$\begin{align}
+
+\textbf{Note}: We will use the following abuse of notation, if $\Prob$ is the probability function for a probability space $(\Omega,\mathcal A,\Prob)$, and $X$ is a random variable on $\Omega$, we use the same symbol $\Prob$ to denote a probability distribution on $X$
+\begin{align}
 	 & \Prob(A), \ A\in\mathcal A \ \ \text{in this context $\Prob$ is the probability function} \\
 	 & \Prob(X=x_i) \ \ \text{in this context $\Prob$ is the probability distribution.}
 \end{align}
+
 \begin{theorem}
-	Let's consider a probability space $(\Omega,\mathcal A, \Prob)$, let $A\in \Omega$ and let $\{B_1,B_2\dots B_n\}$ to be a partition of $\Omega$. The \textbf{Total Probability} formula states that:\begin{equation}
+	Let's consider a probability space $(\Omega,\mathcal A, \Prob)$, let $A\in \Omega$ and let $\{B_1,B_2\dots B_n\}$ to be a partition of $\Omega$.
+	The \textbf{Total Probability} formula states that:
+	\begin{equation}
 		\Prob(A)=\sum_{i=1}^n\Prob(A\cap B_i)
 	\end{equation}
-	since $\Prob(A\cap B_i)=\Prob(A|B_i)\Prob(B_i)$ we have\begin{equation}
+	since $\Prob(A\cap B_i)=\Prob(A|B_i)\Prob(B_i)$ we have
+	\begin{equation}
 		\Prob(A)=\sum_{i=1}^n\Prob(A|B_i)\Prob(B_i)
 	\end{equation}
 \end{theorem}
-Let $X=\{X_1,X_2\dots X_n\}$ a finite set of random variables, and let $\omega$ be an assignment of all the variables\begin{align}
+
+Let $X=\{X_1,X_2\dots X_n\}$ a finite set of random variables, and let $\omega$ be an assignment of all the variables
+\begin{align}
 	 & \omega=(x_1,x_2\dots x_n)                     \\
 	 & \omega\in\Omega=X_1\times X_2\dots \times X_n \\
 	 & x_1\in X_1                                    \\
@@ -1277,32 +1344,93 @@ Let $X=\{X_1,X_2\dots X_n\}$ a finite set of random variables, and let $\omega$ 
 	 & \vdots                                        \\
 	 & x_n\in X_n.
 \end{align}
-There exists a joint probability distribution $\Prob$ on $\Omega$. Let $\phi$ to be a proposition defined in terms of $X_1\dots X_n$, for example\begin{equation}
+
+There exists a joint probability distribution $\Prob$ on $\Omega$. Let $\phi$ to be a proposition defined in terms of $X_1\dots X_n$, for example
+\begin{equation}
 	\phi=x_1\lor x_2 \land \lnot x_3
 \end{equation}
-$\phi$ is satisfied by all the events $\Omega_\phi$:\begin{equation}
+$\phi$ is satisfied by all the events $\Omega_\phi$:
+\begin{equation}
 	\Omega_\phi=\{\omega\in \Omega \ : \ \omega \text{ makes } \phi \text{ true }\}
 \end{equation}
-the \textbf{Inference by Enumeration} formula states that, the probability that $\phi$ is satisfied is \begin{equation}
+the \textbf{Inference by Enumeration} formula states that, the probability that $\phi$ is satisfied is
+\begin{equation}
 	\Prob(\phi)=\sum_{\omega\in  \Omega_\phi}\Prob(\omega)
 \end{equation}
+
 \begin{definition}
-	Given a probability space $(\Omega,\mathcal A,\Prob)$, and two events $A,B\in\mathcal A$, we say that $A$ and $B$ are \textbf{independent} if and only if\begin{equation}
+	Given a probability space $(\Omega,\mathcal A,\Prob)$, and two events $A,B\in\mathcal A$, we say that $A$ and $B$ are \textbf{independent} if and only if
+	\begin{equation}
 		\Prob(A, B)=\Prob(A\land B)=\Prob(A)\Prob(B).
 	\end{equation}
 \end{definition}
+
+\subsection{Conditional Probability and Bayes' Theorem}
+
+In many real-world problems, we are not interested in the probability of an event occurring in isolation, but rather in the probability of one event \emph{given} that another has occurred.  
+This leads to the concept of \textbf{conditional probability}.
+
+\begin{definition}
+	Given two events $A,B \in \mathcal A$ with $\Prob(B) > 0$, the \textbf{conditional probability} of $A$ given $B$ is defined as:
+	\begin{equation}
+		\Prob(A|B) = \frac{\Prob(A \cap B)}{\Prob(B)}.
+	\end{equation}
+\end{definition}
+
+This definition allows us to update our belief about $A$ once we know that $B$ has occurred.
+
+\bigskip
 \begin{theorem}
-	Given a probability space $(\Omega,\mathcal A,\Prob)$ and two events $A,B\in\mathcal A$, the \textbf{Bayes' Theorem} states that\begin{equation}
-		\Prob(A|B)=\frac{\Prob(B|A)\Prob(A)}{\Prob(B)}
+	Given a probability space $(\Omega,\mathcal A,\Prob)$ and two events $A,B\in\mathcal A$, the \textbf{Bayes' Theorem} states that:
+	\begin{equation}
+		\Prob(A|B) = \frac{\Prob(B|A)\Prob(A)}{\Prob(B)}.
 	\end{equation}
 \end{theorem}
-Let's now consider the \textit{maximum likelihood problem}, given two random variabile $X,Y$, we want to know what is the most likely value of $X$ knowing that $Y=y_i$\begin{equation}
-	\arg\max_{x}\Prob(X=x|Y=y_i)=\arg\max_{x}\frac{\Prob(Y=y_i|X=x)}{\Prob(Y=y_i)}
+
+Bayes’ theorem provides a way to \textit{invert} conditional probabilities — i.e., to compute $\Prob(A|B)$ in terms of $\Prob(B|A)$.  
+This is fundamental in machine learning, where we often want to infer the probability of a \emph{hidden cause} (e.g., a class label or model parameter) given an \emph{observed effect} (e.g., data).
+
+\bigskip
+\textbf{Example intuition.}  
+If $A$ represents “the email is spam” and $B$ represents “the email contains the word ‘discount’,” then $\Prob(B|A)$ is easy to estimate (how often spam emails mention “discount”),  
+while $\Prob(A|B)$ — the probability that an email is spam given that it contains “discount” — can be inferred using Bayes’ theorem.
+
+\bigskip
+\subsection{Likelihood and the Maximum Likelihood Principle}
+
+In machine learning and statistics, we often deal with random variables $X$ and $Y$, where $X$ represents the unknown parameter or cause, and $Y$ represents the observed data.  
+Given an observation $Y = y_i$, we want to determine which value of $X$ is most likely responsible for it.
+
+The \textbf{likelihood function} of $X$ given an observation $y_i$ is defined as:
+\begin{equation}
+	\mathcal{L}(x) = \Prob(Y = y_i | X = x),
 \end{equation}
-for the properties of the arg max function:\begin{equation}
-	\arg\max_{x}\frac{\Prob(Y=y_i|X=x)}{\Prob(Y=y_i)}=\arg\max_{x}{\Prob(Y=y_i|X=x)}
+which represents how “compatible” each value of $x$ is with the observed data $y_i$.
+
+\bigskip
+The \textbf{maximum likelihood estimate (MLE)} seeks the value of $x$ that maximizes this likelihood:
+\begin{equation}
+	\hat{x}_{ML} = \arg\max_x \Prob(X = x | Y = y_i) = \arg\max_x \frac{\Prob(Y = y_i | X = x)\Prob(X = x)}{\Prob(Y = y_i)}.
 \end{equation}
-because $\Prob(Y=y_i)$ is constant.
+
+If all possible values of $X$ are assumed to be equally likely (uniform prior), then $\Prob(X=x)$ is constant and can be ignored.  
+Since $\Prob(Y=y_i)$ is also constant with respect to $x$, we obtain:
+\begin{equation}
+	\hat{x}_{ML} = \arg\max_x \Prob(Y = y_i | X = x).
+\end{equation}
+
+\noindent
+This is the essence of the \textbf{Maximum Likelihood Principle}:  
+\begin{quote}
+	Choose the parameters or hypotheses that make the observed data most probable.
+\end{quote}
+
+\bigskip
+In later chapters (e.g., Bayesian Learning and Parameter Estimation), this principle will appear frequently.  
+It provides the foundation for many models, such as logistic regression, Naive Bayes, and neural networks trained via loss minimization.
+
+
+\bigskip
 \section{Bayesian Learning}
 We want to use a probabilistic approach to model a machine learning problem, the methods presented in this section are surprisingly precise. Let's consider a target function for a classification problem\begin{equation}
 	f:X\rightarrow V
@@ -1801,6 +1929,103 @@ in the end we have:\begin{equation}
 \end{equation}
 \hfill$\blacksquare$
 \subsection{Models for $k$ Classes}
+In this case we have a target function\begin{equation}
+	f:X\rightarrow\{c_1,c_2\dots,c_K\}
+\end{equation}
+we encode the dataset as follows\begin{equation}
+	D=\{(\mathbf x_n,\mathbf t_n)\}_{n=1}^N
+\end{equation}
+where $\mathbf t_n=(t_{n1},\dots t_{nK})$ and $t_{nk}=1\iff$ the $n$-th sample is labeled as class $c_k$.\begin{equation}
+	t_{nk}=1\iff f(\mathbf x_n)=c_k
+\end{equation}
+we estimate $\Prob(c_k|\mathbf x)$ as follows:\begin{equation}
+	\Prob(c_k|\mathbf x)=\frac{\Prob(\mathbf x|c_k)\Prob(c_k)}{\sum_{j=1}^K\Prob(\mathbf x|c_j)\Prob(c_j)}=\frac{\exp(a_k)}{\sum_{j=1}^K\exp(a_j)}
+\end{equation}
+where\begin{equation}
+	a_j=\ln\left(\Prob(\mathbf x|c_j)\Prob(c_j)\right)
+\end{equation}
+we assume that $\Prob(\mathbf x|c_k)$ is Gaussian\begin{equation}
+	\Prob(\mathbf x|c_k)=\mathcal N(\mathbf x,\bmu_k,\Sigma)
+\end{equation}
+and for each class $c_k$, we have that\begin{equation}
+	\Prob(c_k)=p_k
+\end{equation}
+where \begin{equation}
+	\sum_{j=1}^Kp_j=1
+\end{equation}
+so the parameters of the model are\begin{align}
+	 & p_1,p_2,\dots p_K\in \R          \\
+	 & \bmu_1,\bmu_2\dots \bmu_K\in\R^d \\
+	 & \Sigma\in Mat(d\times d)
+\end{align}
+denoting $\mathbf t$ the set of labels in $D$\begin{equation}
+	\mathbf t = \begin{pmatrix}
+		\mathbf t_1 & \dots & \mathbf t_N
+	\end{pmatrix}
+\end{equation}
+the maximum likelihood solution is given by:\begin{equation}
+	\hat p_1,\dots \hat p_k,\hat \bmu_1,\dots \hat \bmu_k,\hat \Sigma=\arg\max_{p_k,\bmu_k,\Sigma}\ln\left(
+	\Prob(\mathbf t|p_1,\dots p_k,\bmu_1,\dots \bmu_k,\Sigma)
+	\right)
+\end{equation}
+the solution can be found analytically and is\begin{align}
+	 & \hat p_k=\frac{N_k}{N}\text{ where }N_k=|\{(\mathbf x_n,\mathbf t_n)\in D \ : \ t_{nk}=1\}| \\
+	 & \hat\bmu_k=\frac{1}{N_k}\sum_{n=1}^Nt_{nk}\mathbf x_n                                       \\
+	 & S_k=\frac{1}{N_k}\sum_{n=1}^Nt_{nk}(\mathbf x_n-\hat\bmu_k)(\mathbf x_n-\hat\bmu_k)^T       \\
+	 & \hat \Sigma = \sum_{k=1}^{K}\frac{N_k}{N}S_k
+\end{align}
+a new sample $\mathbf x'\notin D$ can be predicted as follows:\begin{equation}
+	h^*(\mathbf x')=\arg\max_k\frac{\exp(a_k)}{\sum_j\exp(a_j)}
+\end{equation}
+where $a_k=\ln\left(\hat p_k\mathcal N(\mathbf x',\hat\bmu_k,\hat\Sigma)\right)$.
+\subsection{Naive Bayes Assumption}
+We can consider an ulterior assumption, that the features of the samples are conditional independent, given a sample $\mathbf x_n\in \R^d$:\begin{equation}
+	\Prob(\mathbf x_n|c_k)=\prod_{j=1}^d\Prob(x_{nj}|c_k)
+\end{equation}
+in this case, for each class $c_k$, we don't have a multivariate Gaussian distribution $\mathcal N(\mathbf x_n,\bmu_k,\Sigma)$, but we have $d$ one-dimensional Gaussian distribution\begin{equation}
+	\Prob(x_{nj}|c_k)=\mathcal N(x_{nj},\mu_{jk},\sigma_{jk})
+\end{equation}so the parameters of the model are
+\begin{equation}
+	\begin{matrix}
+		p_k\in\R       \\
+		\mu_{jk}\in \R \\
+		\sigma_{jk}\in \R
+	\end{matrix} \ \text{ where } \
+	\begin{matrix}
+		j=1,\dots d \\ k=1,\dots K
+	\end{matrix}
+\end{equation}
+the maximum likelihood solution can be found analytically:\begin{align}
+	 & \hat p_k=\frac{N_k}{N}                                    \\
+	 & \hat\mu_{jk}=\frac{1}{N_k}\sum_{n=1}^Nt_{nk}x_{nj}        \\
+	 & \hat\sigma_{jk}=\sum_{n=1}^Nt_{nk}(x_{nj}-\hat\mu_{jk})^2
+\end{align}
+\subsubsection{About the Number of Parameters}
+Given a classification problem$$f:\R^d\rightarrow\{c_1\dots c_K\}$$
+what are the size (number of parameters) of the generative model? We have the probabilities$$\Prob(c_k)=p_k $$ this counts as $K-1$ parameters, since the first $K-1$ can be used to calculate $p_K$\begin{equation}
+	p_K=1-\sum_{k=1}^{K-1}p_k
+\end{equation}
+then we have $K$ vectors $\bmu_K$, of each $k$-th Gaussian distribution, since each vector have $d$ real components, we have a total of $kd$ parameter. In the end, we have
+\section{Discriminative Models}
+\chapter{Linear Models}
+A linear function on $\mathbf x$ is represented as follows\begin{equation}
+	\mathbf w^T\mathbf x+w_0
+\end{equation}
+we want to use a compact notation, adding a component to the vector $\mathbf x$:\begin{align}
+	 & \mathbf x \in \R^d\longrightarrow \tilde{\mathbf x}\in \R^{d+1} \\
+	 & \mathbf x=\begin{pmatrix}
+		             x_1 & \dots x_d
+	             \end{pmatrix}^T                                       \\
+	 & \tilde{\mathbf x}=\begin{pmatrix}
+		                     1 & x_1 & \dots x_d
+	                     \end{pmatrix}^T                           \\
+	 & \tilde{\mathbf w}=\begin{pmatrix}
+		                     w_0 & w_1 & \dots w_d
+	                     \end{pmatrix}^T
+\end{align}
+so\begin{equation}
+	\mathbf w^T\mathbf x +w_0=\tilde{\mathbf w}^T\tilde{\mathbf x}=w_0+w_1x_1\dots w_dx_d.
+\end{equation}
 
 % Bibliography and citation part, actually unused, keeped for compilation errors
 %
