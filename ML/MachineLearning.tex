@@ -1428,7 +1428,7 @@ This is the essence of the \textbf{Maximum Likelihood Principle}:
 
 \section{Bayesian Learning}
 
-The Bayesian approach introduces a probabilistic framework for learning, in which uncertainty about hypotheses and predictions is represented explicitly through probabilities.  
+The Bayesian approach introduces a probabilistic framework for learning, in which uncertainty about hypotheses and predictions is represented explicitly through probabilities.
 Instead of committing to a single “best” model derived only from data, Bayesian learning updates our belief about all possible hypotheses as new evidence is observed, represented in a distribution.
 
 \bigskip
@@ -1437,17 +1437,17 @@ Consider a classification problem defined by a target function:
 \begin{equation}
 	f : X \rightarrow V,
 \end{equation}
-where $V$ is a finite set of possible classes.  
+where $V$ is a finite set of possible classes.
 For each instance $x \in X$, and a given dataset $D$, we are interested in the probability
 \begin{equation}
 	\Prob(v | x, D), \qquad v \in V,
 \end{equation}
-that the correct label of $x$ is $v$ given the evidence provided by $D$.  
+that the correct label of $x$ is $v$ given the evidence provided by $D$.
 The learned function can therefore be defined as:
 \begin{equation}
 	\hat f(x) = \arg\max_{v \in V} \Prob(v | x, D) = v^*,
 \end{equation}
-that is, we predict the class with the highest posterior probability.  
+that is, we predict the class with the highest posterior probability.
 In general, it may be useful to compute the entire distribution $\Prob(v | x, D)$ for all $v \in V$, as it reflects our confidence in each possible classification.
 
 \bigskip
@@ -1457,7 +1457,7 @@ To model how data affect our confidence in each hypothesis, we define:
 \begin{equation}
 	\Prob(h | D),
 \end{equation}
-the probability that a hypothesis $h \in H$ is correct given the observed dataset $D$.  
+the probability that a hypothesis $h \in H$ is correct given the observed dataset $D$.
 Applying Bayes’ theorem:
 \begin{equation}
 	\Prob(h | D) = \frac{\Prob(D | h)\Prob(h)}{\Prob(D)}.
@@ -1480,7 +1480,7 @@ This principle expresses how learning combines prior knowledge with new observat
 \bigskip
 \subsection{The Maximum a Posteriori (MAP) Hypothesis}
 
-In practice, it is often infeasible to compute or store the entire posterior distribution over $H$.  
+In practice, it is often infeasible to compute or store the entire posterior distribution over $H$.
 A common approach is to select the most probable hypothesis according to the posterior:
 \begin{equation}
 	h_{MAP} = \arg\max_{h \in H} \Prob(h | D)
@@ -1489,209 +1489,200 @@ A common approach is to select the most probable hypothesis according to the pos
 \end{equation}
 
 \noindent
-The denominator $\Prob(D)$ can be dropped, as it is constant with respect to $h$.  
-The resulting \textbf{Maximum a Posteriori} (MAP) estimate therefore finds the hypothesis that both fits the observed data and aligns with our prior expectations.  
+The denominator $\Prob(D)$ can be dropped, as it is constant with respect to $h$.
+The resulting \textbf{Maximum a Posteriori} (MAP) estimate therefore finds the hypothesis that both fits the observed data and aligns with our prior expectations.
 
 \bigskip
-If all hypotheses are equally likely a priori (i.e., the prior $\Prob(h)$ is uniform), the MAP estimate reduces to the maximum likelihood solution.  
+If all hypotheses are equally likely a priori (i.e., the prior $\Prob(h)$ is uniform), the MAP estimate reduces to the maximum likelihood solution.
 Thus, Bayesian learning generalizes maximum likelihood estimation by incorporating prior knowledge and explicitly reasoning about uncertainty.
 
 \bigskip
 This probabilistic viewpoint not only provides a principled way to handle noisy or incomplete data, but also forms the theoretical basis for models such as Naive Bayes classifiers, Bayesian networks, and Gaussian processes.
 
 \subsection{Bayes Optimal Classifier}
-$h_{MAP}$ is not necessary the optimal solution, let's consider $v_j\in V$, we can apply the total probability formula:\begin{equation}
-	\Prob(v_j|x,D)=\sum_{h_i\in H}\Prob(v_j|x,h_i,D)\Prob(h_i|x,D)
-\end{equation}
-where \begin{itemize}
-	\item $\Prob(v_j|x,h_i,D)$ is the probability that $h_i(x)=v_j$ given $D$.
-	\item The probability that  $h_i(x)=v_j$ is independent from $D$ (if $h_i$ is given), so $\Prob(v_j|x,h_i,D)=\Prob(v_j|x,h_i)$
-	\item $\Prob(h_i|x,D)$ is the probability that $h_i$ is an optimal solution given $x$ and $D$, since $h_i$ does not depend on $x$, we have $\Prob(h_i|x,D)=\Prob(h_i|D)$
-\end{itemize}
-the formula can be rewritten as\begin{equation}
-	\Prob(v_j|x,D)=\sum_{h_i\in H}\Prob(v_j|x,h_i)\Prob(h_i|D)
-\end{equation}
-we define the \textbf{Bayes optimal classifier} as the following function\begin{equation}
-	v_{OB}(x)=\arg\max_{v_j\in V}\sum_{h_i\in H}\Prob(v_j|x,h_i)\Prob(h_i|D)
-\end{equation}
-usually, this is impracticable because we may can't enumerate all the possible hypothesis, or the hypothesis space could be too big. There is an example, Le'ts say that we have three possible hypothesis $h_1,h_2,h_3$ such that
-\begin{align*}
-	\Prob(h_1|D) & = 0.4, & \Prob(\ominus|x, h_1) & = 0, & \Prob(\oplus|x, h_1) & = 1 \\
-	\Prob(h_2|D) & = 0.3, & \Prob(\ominus|x, h_2) & = 1, & \Prob(\oplus|x, h_2) & = 0 \\
-	\Prob(h_3|D) & = 0.3, & \Prob(\ominus|x, h_3) & = 1, & \Prob(\oplus|x, h_3) & = 0
-\end{align*}
-therefore\begin{align*}
-	 & \sum_{i=1}^3\Prob(\oplus|x,h_i)\Prob(h_i|D)=0.4  \\
-	 & \sum_{i=1}^3\Prob(\ominus|x,h_i)\Prob(h_i|D)=0.6
-\end{align*}
-so\begin{equation}
-	v_{OB}(x)=\arg\max_{v_j\in\{\oplus,\ominus\}}\sum_{i=1}^3\Prob(v_j|x,h_i)\Prob(h_i|D)=\ominus
-\end{equation}
-The Bayes optimal classifier is the best possible learner given the same hypothesis space and the same knowledge. Is very powerful but impracticable because requires iteration on $H$.\bigskip
 
-Let's consider the example where the hypothesis space $H$ consists in the following bag containing candies\begin{center}
+The hypothesis $h_{MAP}$ represents the single most probable hypothesis given the data $D$.
+However, this does not necessarily guarantee that the corresponding prediction is the best one.
+In fact, $h_{MAP}$ ignores the uncertainty associated with the other hypotheses in $H$.
+
+To obtain the truly optimal classifier — in the Bayesian sense — we consider the expected prediction over all possible hypotheses, weighted by their posterior probabilities.
+
+\bigskip
+\noindent
+For each class $v_j \in V$, the probability that the correct label of $x$ is $v_j$ given the dataset $D$ can be expressed using the law of total probability:
+\begin{equation}
+	\Prob(v_j|x,D) = \sum_{h_i \in H} \Prob(v_j|x,h_i,D) \Prob(h_i|x,D).
+\end{equation}
+Since the data $D$ are already known, the first term does not depend on $D$ once $h_i$ is fixed, and the second term does not depend on $x$:
+\[
+	\Prob(v_j|x,h_i,D) = \Prob(v_j|x,h_i), \quad \Prob(h_i|x,D) = \Prob(h_i|D).
+\]
+Hence,
+\begin{equation}
+	\Prob(v_j|x,D) = \sum_{h_i \in H} \Prob(v_j|x,h_i)\Prob(h_i|D).
+\end{equation}
+
+\bigskip
+\noindent
+The \textbf{Bayes Optimal Classifier} is then defined as:
+\begin{equation}
+	v_{OB}(x) = \arg\max_{v_j \in V} \sum_{h_i \in H} \Prob(v_j|x,h_i)\Prob(h_i|D).
+\end{equation}
+\newpage
+This classifier computes the posterior probability of each class by averaging over all hypotheses, weighted by how probable each hypothesis is after observing the data.
+It is provably the best possible classifier under the same hypothesis space and available data — no other learner can achieve a lower expected error.
+
+\bigskip
+\noindent
+\textbf{Example.}
+Suppose we have three hypotheses $h_1, h_2, h_3$ with posterior probabilities:
+\[
+	\Prob(h_1|D)=0.4, \quad \Prob(h_2|D)=0.3, \quad \Prob(h_3|D)=0.3,
+\]
+and the class probabilities predicted by each hypothesis are:
+\begin{align*}
+	\Prob(\oplus|x,h_1) & =1, & \Prob(\ominus|x,h_1) & =0, \\
+	\Prob(\oplus|x,h_2) & =0, & \Prob(\ominus|x,h_2) & =1, \\
+	\Prob(\oplus|x,h_3) & =0, & \Prob(\ominus|x,h_3) & =1.
+\end{align*}
+The posterior class probabilities are:
+\begin{align*}
+	\Prob(\oplus|x,D)  & = \sum_{i=1}^3 \Prob(\oplus|x,h_i)\Prob(h_i|D) = 0.4,  \\
+	\Prob(\ominus|x,D) & = \sum_{i=1}^3 \Prob(\ominus|x,h_i)\Prob(h_i|D) = 0.6,
+\end{align*}
+so the Bayes optimal prediction is $v_{OB}(x) = \ominus$.
+This shows that even though $h_{MAP}=h_1$, the optimal classifier considers the contribution of all hypotheses.
+
+\bigskip
+\noindent
+In general, computing $v_{OB}(x)$ is infeasible because it requires iterating over the entire hypothesis space $H$, which may be extremely large or continuous.
+For this reason, practical algorithms use approximations such as $h_{MAP}$ or the Naive Bayes model introduced later.
+
+\bigskip
+\subsubsection{The Candy Example}
+
+To illustrate Bayesian updating, consider a simple generative model.
+There are five bags of candies, each corresponding to a hypothesis $h_i$:
+\begin{center}
 	\includegraphics[width=0.7\textwidth]{images/candies.eps}
 \end{center}
-with the following probability distribution\begin{itemize}
-	\item $\Prob(h_1)=10\%$, $h_1$ is the bag with $100\%$ cherry candies.
-	\item $\Prob(h_2)=20\%$, $h_2$ is the bag with $75\%$ cherry candies.
-	\item $\Prob(h_3)=40\%$, $h_3$ is the bag with $50\%$ cherry candies.
-	\item $\Prob(h_4)=20\%$, $h_4$ is the bag with $25\%$ cherry candies.
-	\item $\Prob(h_5)=10\%$, $h_5$ is the bag with $0\%$ cherry candies.
-\end{itemize}
-We choose a random bag and we want to estimate what kind of bag is it, and what is the probability of extracting a candy of a specific flavor next. We define $\Prob(c)$ the probability of extract a cherry candy, $\Prob(l)$ the probability of extract a lime candy,  the likelihood probability for lime candy is\begin{align*}
-	 & \Prob(l,h_1)=0    \\
-	 & \Prob(l,h_2)=0.25 \\
-	 & \Prob(l,h_3)=0.5  \\
-	 & \Prob(l,h_4)=0.75 \\
-	 & \Prob(l,h_5)=1
-\end{align*}
-the probability of extracting a lime candy without having any data is\begin{equation}
-	\sum_{i=1}^5\Prob(l|h_i)\Prob(h_i)=\frac{1}{2}.
-\end{equation}
-We consider now the following data set $D_1=\{l\}=\{\text{first candy is lime}\}$, for the Bayes rule we know that\begin{equation}
-	\Prob(h_i|D_1)=\frac{\Prob(D_1|h_i)\Prob(h_i)}{\Prob(D_1)}
-\end{equation}
-we set $\Prob(D_1)^{-1}=\alpha$, that is a normalization factor, we have that\begin{align*}
-	 & \Prob(h_1|D_1)=\alpha\Prob(D_1|h_1)\Prob(h_1)=\alpha(0\cdot 0.1)=0                 \\
-	 & \Prob(h_2|D_1)=\alpha\Prob(D_1|h_2)\Prob(h_2)=\alpha(0.25\cdot 0.2)=\alpha0.05=0.1 \\
-	 & \vdots
-\end{align*}
-the final distribution is
-\begin{center}
-	\includegraphics[width=0.7\textwidth]{images/distr_candy.eps}
-\end{center}
-So, let's extract another candy, the dataset is now $D_2=\{l,l\}$, the distribution become\begin{equation}
-	\Prob(H|D_2) = \begin{pmatrix}
-		0 & 0.038 & 0.308 & 0.346 & 0.308
-	\end{pmatrix}
-\end{equation}
-if $D_3=\{l,l,l\}$ the distribution become\begin{equation}
-	\Prob(H|D_3) = \begin{pmatrix}
-		0 & 0.013 & 0.211 & 0.355 & 0.421
-	\end{pmatrix}
-\end{equation}
-we want to calculate the probability of extracting another lime candy\begin{align*}
-	 & \Prob(l|D_3)=\sum_{i=1}^5\Prob(l|h_i)\Prob(h_i|D_3)                                 \\
-	 & = 0 \cdot 0 + 0.25 \cdot 0.013 + 0.5 \cdot 0.211 + 0.75 \cdot 0.355 + 1 \cdot 0.421 \\
-	 & =0.8
-\end{align*}
-if we use $h_{MAP}$, the answer will be $h_5\implies \Prob(l|h_5)=1$, which is not correct.\bigskip
 
-The graph shown in figure \ref{img:candy_graph} shows how the probability that the solution is a given hypothesis $h_i$ change with the number of lime candy extracted (with 0 cherry candy extracted).
+\noindent
+Each $h_i$ specifies a different proportion of cherry ($c$) and lime ($l$) candies:
+\begin{center}
+	\begin{tabular}{c|c|c}
+		$h_i$ & Description                & $\Prob(h_i)$ \\ \hline
+		$h_1$ & $100\%$ cherry             & $0.10$       \\
+		$h_2$ & $75\%$ cherry, $25\%$ lime & $0.20$       \\
+		$h_3$ & $50\%$ cherry, $50\%$ lime & $0.40$       \\
+		$h_4$ & $25\%$ cherry, $75\%$ lime & $0.20$       \\
+		$h_5$ & $100\%$ lime               & $0.10$
+	\end{tabular}
+\end{center}
+
+\noindent
+Before observing any data, the probability of drawing a lime candy is:
+\[
+	\Prob(l) = \sum_{i=1}^{5}\Prob(l|h_i)\Prob(h_i) = 0.5.
+\]
+
+\noindent
+Now suppose the first observed candy is lime, $D_1=\{l\}$.
+Applying Bayes’ rule:
+\[
+	\Prob(h_i|D_1) = \frac{\Prob(D_1|h_i)\Prob(h_i)}{\Prob(D_1)} = \alpha \, \Prob(l|h_i)\Prob(h_i),
+\]
+\newpage
+where $\alpha$ is a normalizing constant ensuring $\sum_i \Prob(h_i|D_1)=1$.
+After updating for successive lime observations ($D_2=\{l,l\}$, $D_3=\{l,l,l\}$), the posterior shifts increasingly toward hypotheses with higher lime proportions.
+Figure~\ref{img:candy_graph} shows this evolution.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.8\textwidth]{images/candy_graph.pdf}
-	\caption{probability of each hypothesis}
+	\caption{Posterior probabilities for each hypothesis as lime candies are observed.}
 	\label{img:candy_graph}
 \end{figure}
-\noindent
-Let's now consider an example with a continuous hypothesis space\begin{align}
-	 & h_\theta\in H, \ \theta\in[0,1] \\
-	 & \Prob(c|h_\theta)=\theta        \\
-	 & \Prob(l|h_\theta)=1-\theta
-\end{align}
-the maximum likelihood hypothesis is\begin{equation}
-	h_{ML}=\arg\max_{\theta\in[0,1]}\Prob(D|h_\theta)
-\end{equation}
-for the properties of the arg max function, this value is equal to
-\begin{equation}
-	h_{ML}=\arg\max_{\theta\in[0,1]}L(D,h_\theta)
-\end{equation}
-if \begin{equation}
-	L(D,h_\theta)=\log\Prob(D|h_\theta)
-\end{equation}
-we have that\begin{equation}
-	\Prob(D|h_{\theta})=\prod_{j=1}^{|D|}\Prob(d_j|h_\theta)=\theta^c(1-\theta)^l
-\end{equation}
-where\begin{align*}
-	 & d_j\in D                                   \\
-	 & l = \text{ number of lime candies in }D    \\
-	 & c = \text{ number of cherry candies in }D.
-\end{align*}
-So\begin{equation}
-	L(D,h_\theta)=\log(\theta^c(1-\theta)^l)=c\log\theta+l\log(1-\theta)
-\end{equation}
-to find the value of $\theta$ that maximize $\Prob(D|h_\theta)$ we can find the maximum value of $ L(D,h_\theta)$ by considering the derivative:\begin{align*}
-	 & \frac{dL}{d\theta}=\frac{c}{\theta}-\frac{l}{1-\theta}
-\end{align*}
-we find the maximum value by imposing $\frac{dL}{d\theta}=0$\begin{equation}
-	\frac{c}{\theta}-\frac{l}{1-\theta}=0\iff \theta=\frac{c}{c+l}=\frac{c}{|D|}=\theta^*
-\end{equation}
-so $h_{\theta^*}$ is the maximum likelihood hypothesis, this is trivial.\bigskip
 
-In the general case, we have a dataset $D=\bigcup_i d_i$, we assume a probability distribution $\Prob(d_i|h)$ and we find the Maximum likelihood estimation\begin{equation}
-	h_{ML}=\arg\max_{h\in H}\log\Prob(D|h)
-\end{equation}
-this can't be solved analytically for some distributions.
+\bigskip
+\noindent
+After three lime candies, the posterior probability that the next candy is lime is:
+\[
+	\Prob(l|D_3) = \sum_{i=1}^5 \Prob(l|h_i)\Prob(h_i|D_3) = 0.8.
+\]
+Notice that the $h_{MAP}$ hypothesis would be $h_5$ (100\% lime), yielding $\Prob(l|h_5)=1$, which overestimates the true probability — highlighting why averaging across hypotheses is more accurate.
+
+\bigskip
+\subsubsection{Continuous Hypothesis Space}
+
+Now consider a continuous family of hypotheses $h_\theta$, where $\theta \in [0,1]$ represents the proportion of cherry candies:
+\[
+	\Prob(c|h_\theta)=\theta, \qquad \Prob(l|h_\theta)=1-\theta.
+\]
+Given a dataset $D$ with $c$ cherries and $l$ limes, the likelihood is:
+\[
+	\Prob(D|h_\theta)=\theta^c(1-\theta)^l.
+\]
+The log-likelihood is:
+\[
+	L(D,h_\theta)=c\log\theta + l\log(1-\theta),
+\]
+and maximizing it with respect to $\theta$ gives:
+\[
+	\theta^* = \frac{c}{c+l} = \frac{c}{|D|}.
+\]
+Thus, $h_{\theta^*}$ is the maximum likelihood hypothesis.
+In more complex distributions, this maximization cannot always be performed analytically.
+
+\bigskip
 \subsection{Naive Bayes Classifier}
-\begin{itemize}
-	\item with a discrete problem we can apply the Bayes Optimal Classifier, provides the best result but is not practical if the hypothesis space is large.
-	\item with a continuous model we consider the maximum likelihood estimation when analytical solutions are available.
-\end{itemize}
-What happens if we can't apply the previous methods? We use the assumption of conditional independence.\begin{definition}
-	$X$ is conditionally independent of $Y$ given $Z$ if\begin{equation}
-		\Prob(X, Y|Z)= \Prob(X|Y,Z)\Prob(Y|Z)=\Prob(X|Z)\Prob(Y|Z).
+
+The Bayes Optimal Classifier provides the best possible predictions but is computationally impractical for large or continuous hypothesis spaces.
+The Naive Bayes Classifier provides a simple yet powerful approximation by assuming that the input features are conditionally independent given the class.
+
+\begin{definition}
+	Two random variables $X$ and $Y$ are \textbf{conditionally independent} given $Z$ if:
+	\begin{equation}
+		\Prob(X,Y|Z) = \Prob(X|Z)\Prob(Y|Z).
 	\end{equation}
 \end{definition}
-This assumption in practice is usually not true, so the solution will be approximated.
-Let's consider a target function $$f:X\rightarrow V $$ where each instance $x\in X$ is described by different attributes $$x=(a_1,a_2\dots, a_n)$$
-we compute\begin{equation}
-	\arg\max_{v\in V}\Prob(v|x,D)
-\end{equation}
-we express $x$ in terms of the attributes\begin{align}
-	 & \arg\max_{v\in V}\Prob(v|a_1,a_2\dots, a_n,D)            \\
-	 & =\arg\max_{v\in V}\Prob(a_1,a_2\dots, a_n|v,D)\Prob(v|D)
-\end{align}
-then we assume that the attributes are conditionally independent\begin{equation}
-	\Prob(a_1,a_2\dots, a_n|v,D)=\prod_{i=1}^{n} \Prob(a_i|v,D)
-\end{equation}
-so the \textbf{Naive Bayes Classifier} is the learned function:\begin{equation}
-	v_{NB}(x)=v_{NB}(a_1\dots, a_n)=\arg\max_{v\in V}\Prob(v|D)\prod_{i=1}^{n} \Prob(a_i|v,D)
-\end{equation}
-Clearly the assumption that the attributes are independent ins wrong, consider the tennis example \ref{tab:tennis_data_big}, if the outlook is $Rain$, the probability that the temperature is $hot$ is lower than the probability that is $cool$.\bigskip
 
-The algorithm \ref{alg:naive_bayes} show the procedure of the naive Bayes classifier estimation in the case of a classification problem.\bigskip
+\noindent
+Although this assumption is rarely true in real-world data, it leads to an efficient classifier that performs remarkably well in practice.
 
-\begin{algorithm}
-	\caption{Naive Bayes Classifier}\label{alg:naive_bayes}
-	\begin{algorithmic}
-		\Require a dataset $D$, target function $f:X\rightarrow V$,$X=A_1\times \dots \times A_n$, a new instance $x=(a_1\dots,a_n)$
-		\For{each $v_j\in V$}
-		\State $\hat \Prob(v_j|D)\longleftarrow$\texttt{estimate}$(\Prob(v_j|D))$
-		\For{each attribute $A_k$}
-		\For{each $a_i^k\in A_k$}
-		\State $\hat \Prob(a_i^k|v_j,D)\longleftarrow$\texttt{estimate}$(\Prob(a_i^k|v_j,D))$
-		\EndFor
-		\EndFor
-		\EndFor
-	\end{algorithmic}
-\end{algorithm}
+\bigskip
+\noindent
+Given a target function $f: X \rightarrow V$, where each instance $x \in X$ is described by attributes $x=(a_1,a_2,\dots,a_n)$, we wish to predict:
+\[
+	v_{NB}(x) = \arg\max_{v\in V}\Prob(v|a_1,a_2,\dots,a_n,D).
+\]
+By Bayes’ theorem:
+\[
+	\Prob(v|a_1,\dots,a_n,D) \propto \Prob(a_1,\dots,a_n|v,D)\Prob(v|D),
+\]
+and assuming conditional independence among the attributes:
+\[
+	\Prob(a_1,\dots,a_n|v,D) = \prod_{i=1}^n \Prob(a_i|v,D).
+\]
+Thus, the \textbf{Naive Bayes Classifier} becomes:
+\[
+	v_{NB}(x) = \arg\max_{v\in V}\Prob(v|D)\prod_{i=1}^n\Prob(a_i|v,D).
+\]
 
-After the probability $\hat\Prob$ are estimated, the new instance is classified\begin{equation}
-	v_{NB}=\arg\max_{v\in V}\hat\Prob(v|D)\prod_{i=1}^{n}\hat\Prob(a_i^k|v,D).
-\end{equation}
-How the probabilities are estimated? For $v_j\in V$ is considered the set the samples with $v_j$ as label\begin{equation}
-	D_{v_j}=\{(x,v)\in D \ : \ v=v_j\}
-\end{equation}
-then the estimated probability is \begin{equation}
-	\hat\Prob(v_j|D)=\frac{|D_{v_j}|}{|D|}
-\end{equation}
-given $a_i^k\in A_k$, for $\hat \Prob(a_i|v_j,D)$, we consider the set of all samples such that, their $A_k$ attribute have $a_i^k$ as a value\begin{align}
-	 & D_{a_i^k}=\{(a^1,a^2\dots a^k \dots , a^n,v)\in D \ : \ a^k=a^k_i\} \\
-	 & \hat \Prob(a_i^k|v_j,D)=\frac{|D_{a_i^k}|}{|D_{v_j|}}
-\end{align}
-usually, in the estimation are included two real number $p,m$ such that\begin{equation}
-	\hat \Prob(a_i^k|v_j,D)=\frac{|D_{a_i^k}|+mp}{|D_{v_j|}+m}
-\end{equation}
-where\begin{itemize}
-	\item $p$ is a prior estimation for $\Prob(a_i^k|v_j,D)$
-	\item $m$ is a weight given to that prior estimation.
-\end{itemize}
-Even if the conditional independence assumption is often violated the naive Bayes classifier works surprisingly well, to make that the method works correctly, we don't need that the posteriori estimation $\hat\Prob(v_j|x,D)$ to be correct, but we need that\begin{equation}
-	\arg\max_{v\in V}\hat\Prob(v|D)\prod_{i=1}^{n}\hat\Prob(a_i^k|v,D)=\arg\max_{v\in V}\Prob(v|D)\Prob(a_1\dots, a_n|v,D).
-\end{equation}
+\bigskip
+\noindent
+The probabilities are estimated from the dataset as:
+\[
+	\hat\Prob(v_j|D)=\frac{|D_{v_j}|}{|D|}, \qquad
+	\hat\Prob(a_i^k|v_j,D)=\frac{|D_{a_i^k}|+mp}{|D_{v_j}|+m},
+\]
+where $p$ and $m$ represent prior knowledge and its confidence weight.
+
+\bigskip
+\noindent
+Despite its simplicity and the unrealistic independence assumption, the Naive Bayes classifier performs surprisingly well in many domains.
+Its success stems from the fact that even if individual probabilities are inaccurate, their relative magnitudes (which determine the $\arg\max$) often remain correct.
+
 \subsection{Text Classification}
 In this section we explain how to model a simple document classifier using the naive Bayes approach, the target function, given a document, returns the the class of that document (e.g. Scientific Article, Recipe, Poem, ecc...). This classifier have multiple application, in example:\begin{itemize}
 	\item Spam classification for e-mail
@@ -2067,6 +2058,9 @@ we want to use a compact notation, adding a component to the vector $\mathbf x$:
 \end{align}
 so\begin{equation}
 	\mathbf w^T\mathbf x +w_0=\tilde{\mathbf w}^T\tilde{\mathbf x}=w_0+w_1x_1\dots w_dx_d.
+\end{equation}
+In general, we have an error function $E(\mathbf w)$ that we want to minimize\begin{equation}
+	\mathbf w^*=\arg\min_{\mathbf w}E(\mathbf w)
 \end{equation}
 
 % Bibliography and citation part, actually unused, keeped for compilation errors
