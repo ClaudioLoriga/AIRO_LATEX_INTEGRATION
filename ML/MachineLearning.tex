@@ -1747,20 +1747,32 @@ The algorithm \ref{alg:text_classifier} describes the methods that estimate the 
 After we got the probabilities $\hat\Prob$, we classify a new document $doc=w_1\dots w_{m}$ as follows\begin{equation}
 	v_{NB}(doc)=\arg\max_{c_j\in C}\hat\Prob(c_j)\prod_{i=1}^{m}\hat\Prob(w_i|c_j)
 \end{equation}
+
 \section{Probabilistic Generative Models}
+In Probabilistic Generative Models, the search of a solution is the determination of the best parameters $\btheta$ that define how samples are generated. 
+Rather than modeling every possible distribution, we restrict the hypothesis space to functions
+\[
+\Prob(\mathbf x|c_k) = \Prob(\mathbf x|\btheta_k),
+\]
+where $\btheta_k$ contains the parameters of the distribution (such as means, variances or covariances).
+\newline
+Learning then consists of estimating these parameters from data, which determines the shape and flexibility of the model.  
+A higher number of parameters usually increases expressiveness but also the risk of overfitting and to be computationally expensive.
+
+\bigskip
 \subsection{Parametrized Hypothesis Space}
 Given a target function
 $$ f:X\rightarrow C $$
-we have a parametrized hypothesis space if, the set of all possible solutions $H$, contains functions of the type
+we have a \textbf{parametrized} hypothesis space if, the set of all possible solutions $H$, contains functions of the type
 \begin{equation}
 	y(x,\btheta)
 \end{equation}
 where $x\in X$ and $\btheta$ is the parameters of the function, an example is\begin{equation}
 	y(x,\mathbf w)=y(x,(w_1,w_2,w_3,w_4))=\sum_{i=1}^4x^iw_i
 \end{equation}
-in this kinds of problem, the search of a solution, is the determination of the parameters $\btheta$. If the we have a high number of parameters, the model will be more powerful and the training will be more expensive (in computational terms).
 
-A model could also be hyperparametrized, if the set of possible solution is parameterized by some fixed values that can't change during the training. An example of hyper parameter could be the grade of the polynomials functions in the hypothesis space $H$.
+\bigskip
+A model could also be \textbf{hyperparametrized}, if the set of possible solution is parameterized by some fixed values that can't change during the training. An example of hyper parameter could be the grade of the polynomials functions in the hypothesis space $H$.
 \begin{align*}
 	 & H=\left\{\sum_{i=1}^nw_ix^i\right\}     \\
 	 & n\text{ is an hyperparameter}           \\
@@ -1775,13 +1787,20 @@ where the input space is continuous: $X\subseteq\R^d$. We need to evaluate the p
 since the dataset is fixed in this context, we can write directly \begin{equation}
 	\Prob(c_k|c) \ \ \ x\notin D
 \end{equation}
-is implicit that the probability depends on the dataset. The \textit{main assumption} of this section is that there is a \textbf{Gaussian Distribution} over $x$, for each class $c_k$\begin{equation}
+is implicit that the probability depends on the dataset. The \textit{main assumption} of this section is that there is a \textbf{Gaussian Distribution} over $x$, for each class $c_k$
+\begin{equation}
 	\Prob(x|c_k)=\mathcal N(x,\mu_k,\Sigma_k)
 \end{equation}
 where $\mu_k$ is the mean vector and $\Sigma_k$ is the covariance matrix. To emphasize and reiterate that certain quantities are vectors, bold letters will be used in the notation.
 \begin{equation}
 	\Prob(\mathbf x|c_k)=\mathcal N(\mathbf  x,\bmu_k,\Sigma_k)
 \end{equation}
+
+\paragraph{Why Gaussian Distributions?}
+The assumption that each class follows a Gaussian distribution is mainly motivated by mathematical convenience and empirical effectiveness. 
+Gaussian densities can be estimated efficiently, they provide smooth continuous models, and under mild assumptions on the data (from the Central Limit Theorem) they offer a reasonable approximation for many real-world distributions. 
+Moreover, they lead to analytically tractable posterior probabilities and simple decision boundaries.
+
 \subsection{Models for 2 Classes}
 Let's consider the case with two classes
 $$
@@ -2040,6 +2059,8 @@ what are the size (number of parameters) of the generative model? We have the pr
 \end{equation}
 then we have $K$ vectors $\bmu_K$, of each $k$-th Gaussian distribution, since each vector have $d$ real components, we have a total of $kd$ parameter. In the end, we have
 \section{Discriminative Models}
+
+
 \chapter{Linear Models}
 A linear function on $\mathbf x$ is represented as follows\begin{equation}
 	\mathbf w^T\mathbf x+w_0
