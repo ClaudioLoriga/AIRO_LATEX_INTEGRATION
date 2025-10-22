@@ -1929,12 +1929,13 @@ The function $a(\mathbf x)$ includes non linear terms, since it includes the Gau
 \end{equation}
 where
 \begin{itemize}
-    \item $a(\mathbf x)$ measures how much more likely $\mathbf x$ is to come from class $c_1$ than from class $c_2$.
-    \item $\mathbf w$ controls the \textbf{orientation} of the decision boundary.
-    \item $w_0$ controls the \textbf{position} (or shift) of that boundary.
-    \item The condition $a(\mathbf x)=0$ defines a \textbf{linear separating hyperplane} between the two Gaussian classes.
+	\item $a(\mathbf x)$ measures how much more likely $\mathbf x$ is to come from class $c_1$ than from class $c_2$.
+	\item $\mathbf w$ controls the \textbf{orientation} of the decision boundary.
+	\item $w_0$ controls the \textbf{position} (or shift) of that boundary.
+	\item The condition $a(\mathbf x)=0$ defines a \textbf{linear separating hyperplane} between the two Gaussian classes.
 \end{itemize}
 
+\bigskip
 \subsection{Models for $k$ Classes}
 In this case we have a target function\begin{equation}
 	f:X\rightarrow\{c_1,c_2\dots,c_K\}
@@ -1985,6 +1986,7 @@ a new sample $\mathbf x'\notin D$ can be predicted as follows:\begin{equation}
 	h^*(\mathbf x')=\arg\max_k\frac{\exp(a_k)}{\sum_j\exp(a_j)}
 \end{equation}
 where $a_k=\ln\left(\hat p_k\mathcal N(\mathbf x',\hat\bmu_k,\hat\Sigma)\right)$.
+
 \subsection{Naive Bayes Assumption}
 We can consider an ulterior assumption, that the features of the samples are conditional independent, given a sample $\mathbf x_n\in \R^d$:\begin{equation}
 	\Prob(\mathbf x_n|c_k)=\prod_{j=1}^d\Prob(x_{nj}|c_k)
@@ -2002,19 +2004,129 @@ in this case, for each class $c_k$, we don't have a multivariate Gaussian distri
 		j=1,\dots d \\ k=1,\dots K
 	\end{matrix}
 \end{equation}
-the maximum likelihood solution can be found analytically:\begin{align}
+the maximum likelihood solution can be found analytically:
+\begin{align}
 	 & \hat p_k=\frac{N_k}{N}                                    \\
 	 & \hat\mu_{jk}=\frac{1}{N_k}\sum_{n=1}^Nt_{nk}x_{nj}        \\
 	 & \hat\sigma_{jk}=\sum_{n=1}^Nt_{nk}(x_{nj}-\hat\mu_{jk})^2
 \end{align}
-\subsubsection{About the Number of Parameters}
-Given a classification problem$$f:\R^d\rightarrow\{c_1\dots c_K\}$$
-what are the size (number of parameters) of the generative model? We have the probabilities$$\Prob(c_k)=p_k $$ this counts as $K-1$ parameters, since the first $K-1$ can be used to calculate $p_K$\begin{equation}
-	p_K=1-\sum_{k=1}^{K-1}p_k
-\end{equation}
-then we have $K$ vectors $\bmu_K$, of each $k$-th Gaussian distribution, since each vector have $d$ real components, we have a total of $kd$ parameter. In the end, we have
-\section{Discriminative Models}
 
+%\subsubsection{About the Number of Parameters}
+%Given a classification problem$$f:\R^d\rightarrow\{c_1\dots c_K\}$$
+%what are the size (number of parameters) of the generative model? We have the probabilities$$\Prob(c_k)=p_k $$ this counts as $K-1$ parameters, since the first $K-1$ can be used to calculate $p_K$
+%\begin{equation}
+%	p_K=1-\sum_{k=1}^{K-1}p_k
+%\end{equation}
+%then we have $K$ vectors $\bmu_K$, of each $k$-th Gaussian distribution, since each vector have $d$ real components, we have a total of $kd$ parameter. In the end, we have
+
+\section{Discriminative Models}
+In probabilistic discriminative models, instead of modeling the class-conditional distributions $\Prob(\mathbf x|C_k)$ as in generative approaches, we directly model the posterior distribution $\Prob(C_k|\mathbf x)$.
+
+\begin{definition}
+	A \textbf{probabilistic discriminative model} estimates directly:
+	\begin{equation}
+		\Prob(C_k|\tilde{\mathbf x}) = \frac{\exp(a_k)}{\sum_j \exp(a_j)}, \qquad
+		a_k = \tilde{\mathbf w}^\top \tilde{\mathbf x},
+	\end{equation}
+	where $\tilde{\mathbf x}$ and $\tilde{\mathbf w}$ are the extended feature and weight vectors including the bias term.
+\end{definition}
+
+The parameters $\tilde{\mathbf w}$ are estimated by \textbf{maximum likelihood}:
+\begin{equation}
+	\tilde{\mathbf w}^* = \arg\max_{\tilde{\mathbf w}} \ln \Prob(\mathbf t|\tilde{\mathbf w}, X),
+\end{equation}
+where $\Prob(\mathbf t|\tilde{\mathbf w}, X)$ is the likelihood of the dataset $D=\langle X,\mathbf t\rangle$.
+
+\subsection{Logistic Regression}
+For the binary classification case ($C_1,C_2$), the logistic regression model defines:
+\begin{equation}
+	y_n = \Prob(C_1|\tilde{\mathbf x}_n) = \sigma(\tilde{\mathbf w}^\top \tilde{\mathbf x}_n), \qquad \sigma(z) = \frac{1}{1+\exp(-z)}.
+\end{equation}
+The likelihood function over the dataset $D=\{(\tilde{\mathbf x}_n,t_n)\}_{n=1}^N$, with $t_n\in\{0,1\}$, is:
+\begin{equation}
+	p(\mathbf t|\tilde{\mathbf w}) = \prod_{n=1}^N y_n^{t_n}(1-y_n)^{1-t_n}.
+\end{equation}
+
+\subsubsection{Error Function and Optimization}
+The negative log-likelihood (cross-entropy error function) is defined as:
+\begin{equation}
+	E(\tilde{\mathbf w}) = -\ln p(\mathbf t|\tilde{\mathbf w}) = -\sum_{n=1}^N[t_n\ln y_n + (1-t_n)\ln(1-y_n)].
+\end{equation}
+The goal is to minimize this error:
+\begin{equation}
+	\tilde{\mathbf w}^* = \arg\min_{\tilde{\mathbf w}} E(\tilde{\mathbf w}).
+\end{equation}
+The minimization can be performed via iterative optimization methods, such as \textbf{Newton-Raphson} or \textbf{Iteratively Reweighted Least Squares (IRLS)}.
+
+\subsection{Iteratively Reweighted Least Squares (IRLS)}
+The gradient of $E(\tilde{\mathbf w})$ is:
+\begin{equation}
+	\nabla E(\tilde{\mathbf w}) = \tilde{X}^\top (\mathbf y(\tilde{\mathbf w}) - \mathbf t),
+\end{equation}
+and the Hessian is:
+\begin{equation}
+	H(\tilde{\mathbf w}) = \tilde{X}^\top R(\tilde{\mathbf w})\tilde{X},
+\end{equation}
+where:
+\begin{equation}
+	R(\tilde{\mathbf w}) = \mathrm{diag}(y_n(1-y_n)).
+\end{equation}
+The iterative update rule is:
+\begin{equation}
+	\tilde{\mathbf w} \leftarrow 
+	\tilde{\mathbf w} - 
+	( \tilde{X}^\top R(\tilde{\mathbf w})\tilde{X})^{-1} 
+	\tilde{X}^\top(\mathbf y(\tilde{\mathbf w}) - \mathbf t).
+\end{equation}
+\noindent
+This update rule follows the \textbf{Newton-Raphson} method for optimization.  
+At each iteration, $\tilde{\mathbf w}$ is updated by moving in the opposite direction of the gradient, scaled by the inverse of the Hessian.  
+The matrix $R$ reweights the contribution of each data point according to the current prediction $y_n$, assigning higher weights to uncertain samples (those with $y_n \approx 0.5$).  
+This process is repeated until convergence, leading to the maximum likelihood estimate of $\tilde{\mathbf w}$.
+
+
+\subsection{Multiclass Logistic Regression}
+For a classification problem with $K$ classes, the posterior probability is modeled using the \textbf{softmax function}:
+\begin{equation}
+	\Prob(C_k|\tilde{\mathbf x}) = 
+	\frac{\exp(a_k)}{\sum_{j=1}^K \exp(a_j)}, 
+	\qquad 
+	a_k = \tilde{\mathbf w}_k^\top \tilde{\mathbf x}.
+\end{equation}
+\noindent
+The softmax function generalizes the sigmoid function to multiple classes.  
+It converts the unbounded linear activations $a_k$ into normalized probabilities that sum to one:
+\begin{equation}
+	\sum_{k=1}^K \Prob(C_k|\tilde{\mathbf x}) = 1.
+\end{equation}
+Each term $\Prob(C_k|\tilde{\mathbf x})$ represents the relative likelihood of $\tilde{\mathbf x}$ belonging to class $C_k$.  
+The exponentials ensure that larger activations correspond to higher probabilities while maintaining differentiability for gradient-based optimization.
+
+\bigskip
+The likelihood for the dataset $D=\{(\tilde{\mathbf x}_n,\mathbf t_n)\}_{n=1}^N$ (with one-hot encoded labels $\mathbf t_n$) is:
+\begin{equation}
+	p(\mathbf T|\tilde{\mathbf w}_1,\dots,\tilde{\mathbf w}_K) 
+	= \prod_{n=1}^N\prod_{k=1}^K 
+	\Prob(C_k|\tilde{\mathbf x}_n)^{t_{nk}}.
+\end{equation}
+The cross-entropy error function becomes:
+\begin{equation}
+	E(\tilde{\mathbf w}_1,\dots,\tilde{\mathbf w}_K) 
+	= -\sum_{n=1}^N\sum_{k=1}^K t_{nk}\ln y_{nk},
+\end{equation}
+and the parameters $\tilde{\mathbf w}_1,\dots,\tilde{\mathbf w}_K$ are optimized by minimizing $E$.
+
+
+\subsection{Generalization and Feature Space}
+The same principles apply to any parametric prediction model $y(\mathbf x;\boldsymbol\theta)\approx f(\mathbf x)$.
+\begin{equation}
+	\boldsymbol\theta^* = \arg\min_{\boldsymbol\theta} E(\boldsymbol\theta).
+\end{equation}
+Classification of new samples is then made as $y(\mathbf x';\boldsymbol\theta^*)$.
+
+\bigskip
+Finally, learning can be performed in a transformed \textbf{feature space} $\Phi$ using a mapping $\varphi:\tilde{\mathbf x}\mapsto\boldsymbol\varphi(\tilde{\mathbf x})$, by substituting $\tilde{\mathbf x}$ with $\boldsymbol\varphi(\tilde{\mathbf x})$ in all equations.
+This allows to perform learning in a higher-dimensional space, a key concept for kernel methods.
 
 \chapter{Linear Models}
 A linear function on $\mathbf x$ is represented as follows\begin{equation}
@@ -2038,7 +2150,207 @@ so\begin{equation}
 In general, we have an error function $E(\mathbf w)$ that we want to minimize\begin{equation}
 	\mathbf w^*=\arg\min_{\mathbf w}E(\mathbf w)
 \end{equation}
+Let's consider binary classification, there are a set of samples $D=\{(\mathbf x_n,t_n)_{n=1}^N\}$ where $\mathbf x_n\in \R^d$ and $t_n\in\{-,+\}$, we say that $D$ is \textbf{linearly separable} if there exists an hyper plane $$ \{\mathbf x \  : \ \mathbf a^T\mathbf x+\mathbf b= 0\}$$ such that
+\begin{align}
+	 & t_n=+\iff \mathbf a^T\mathbf x_n+\mathbf b\le 0 \\
+	 & t_n=-\iff \mathbf a^T\mathbf x_n+\mathbf b> 0
+\end{align}
+In $\R^2$, a data set is linearly separable if there exists a line such that all and only the $+$ samples are in one of the half space generated by the line.\bigskip
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.5\textwidth]{images/linsep.eps}
+	\caption{linearly separable data}
+	\label{img:linsep}
+\end{figure}
+
+If such an hyperplane exists, can be found with a linear model by tuning $d+1$ parameters $\mathbf w, w_0$ (we consider the compact notation and we denote $\mathbf w$ the whole set of parameters) $$ \mathbf x^T\mathbf w=\begin{pmatrix}
+		1 & x_1 & \dots & x_n
+	\end{pmatrix}\begin{pmatrix}
+		w_0 \\w_1 \\\vdots \\ w_n
+	\end{pmatrix}.$$
+
+The hyperplane that we want to find is called \textbf{linear discriminant}.
+We consider the binary notation for the samples, the target function have $K$ classes as the image, if
+$$ (\mathbf x_n,\mathbf t_n)\in D$$
+then $\mathbf t_n$ is a binary vector of $K$ components, where the $i$-th coordinate of  $\mathbf t_n$ is 1 if and only if $\mathbf x_n$ is labeled with class $i$
+$$
+	\mathbf t^T_n=\begin{pmatrix}
+		0 & 0 & \dots 1 & \dots & 0
+	\end{pmatrix}
+	.
+$$
+In the case of multiple classes, let's say $K$, we don't have a vector $\mathbf w$, but we have $K$ linear functions $\mathbf w_1\dots \mathbf w_k$, for each new sample $\mathbf x$ we calculate a prediction vector\begin{equation}
+	\mathbf y(\mathbf x)=\begin{pmatrix}
+		\mathbf w_1^T\mathbf x \\ \vdots \\ \mathbf w_K^T\mathbf x
+	\end{pmatrix}
+\end{equation}
+Since we have $K$ vectors of $d$ components as parameter, we can describe all the parameters in compact notation with a matrix $W$\begin{equation}
+	W=\begin{pmatrix}
+		\mathbf w_1 & \dots & \mathbf w_K
+	\end{pmatrix}
+\end{equation}
+the predictions are calculated by\begin{equation}
+	\mathbf y(\mathbf x)=W^T\mathbf x
+\end{equation}
+\subsection{Least Square Methods}
+We define the $T$ matrix as the matrix where the rows are the transpose vector $\mathbf t_n$\begin{equation}
+	T=\begin{pmatrix}
+		\mathbf t^T_1 \\
+		\mathbf t^T_2 \\ \vdots \\
+		\mathbf t^T_N
+	\end{pmatrix}\in Mat(N\times K)
+\end{equation}
+then, we define  the matrix $X$ as the matrix where the rows are the transpose vector $\mathbf x$ (with 1 as the first component, since we are using the compact notation).\begin{equation}
+	X=\begin{pmatrix}
+		\mathbf x_1^T \\
+		\mathbf x_2^T \\ \vdots \\
+		\mathbf x_N^T
+	\end{pmatrix}=\begin{pmatrix}
+		1      & x_{11} & x_{12} & \dots  & x_{1d} \\
+		1      & x_{21} & x_{22} & \dots  & x_{2d} \\
+		\vdots & \vdots & \vdots & \ddots & \vdots \\
+		1      & x_{N1} & x_{N2} & \dots  & x_{Nd}
+	\end{pmatrix}\in Mat(N\times d)
+\end{equation}
+let $W=\begin{pmatrix}
+		\mathbf w_1 & \dots & \mathbf w_K
+	\end{pmatrix}$ to be the parameters of the linear model, the product $XW$ is: \begin{align}
+	 & XW = \begin{pmatrix}
+		        1      & x_{11} & x_{12} & \dots  & x_{1d} \\
+		        1      & x_{21} & x_{22} & \dots  & x_{2d} \\
+		        \vdots & \vdots & \vdots & \ddots & \vdots \\
+		        1      & x_{N1} & x_{N2} & \dots  & x_{Nd}
+	        \end{pmatrix}\begin{pmatrix}
+		                     \mathbf w_0 & \mathbf w_1 & \dots & \mathbf w_K
+	                     \end{pmatrix}=                                \\ \\
+	 & \begin{pmatrix}
+		   1      & x_{11} & x_{12} & \dots  & x_{1d} \\
+		   1      & x_{21} & x_{22} & \dots  & x_{2d} \\
+		   \vdots & \vdots & \vdots & \ddots & \vdots \\
+		   1      & x_{N1} & x_{N2} & \dots  & x_{Nd}
+	   \end{pmatrix}
+	\begin{pmatrix}
+		w_{00} & w_{01} & \dots  & w_{0d}          \\
+		w_{10} & w_{11} & \dots  & w_{1d}          \\
+		\vdots & \vdots & \vdots & \ddots & \vdots \\
+		w_{K0} & w_{K1} & \dots  & w_{Kd}
+	\end{pmatrix}=                                                          \\  \\
+	 & \begin{pmatrix}
+		   \mathbf w^T_1\mathbf x_1 & \mathbf w^T_2\mathbf x_1 & \dots  & \mathbf w^T_K\mathbf x_1          \\
+		   \mathbf w^T_1\mathbf x_2 & \mathbf w^T_2\mathbf x_2 & \dots  & \mathbf w^T_K\mathbf x_2          \\
+		   \vdots                   & \vdots                   & \vdots & \ddots                   & \vdots \\
+		   \mathbf w^T_1\mathbf x_N & \mathbf w^T_2\mathbf x_N & \dots  & \mathbf w^T_K\mathbf x_N
+	   \end{pmatrix} = \\ \\ &\begin{pmatrix}
+		\mathbf y(\mathbf x_1)^T \\
+		\mathbf y(\mathbf x_2)^T \\
+		\vdots                   \\
+		\mathbf y(\mathbf x_N)^T
+	\end{pmatrix}
+\end{align}
+So $XW$ are the predictions of the model on all the samples $\mathbf x_n$, the difference\begin{equation}
+	XW-T = \begin{pmatrix}
+		\mathbf y(\mathbf x_1)^T-\mathbf t_1 \\
+		\mathbf y(\mathbf x_2)^T-\mathbf t_2 \\
+		\vdots                               \\
+		\mathbf y(\mathbf x_N)^T-\mathbf t_N
+	\end{pmatrix}
+\end{equation}
+measure how different the prediction of the model are respect to the label on the sample data. Based on that, given a model $W$, we can define the \textbf{sum of squares error function}:\begin{equation}
+	E(W)=\frac{1}{2}Tr\left( (XW-T)^T(XW-T) \right)
+\end{equation}
+Where with $Tr(A)$ we denote the trace of the matrix $A$. The parameters solution is found by the following optimization problem: \begin{equation}
+	W^*=\arg\min_W\frac{1}{2}Tr\left( (XW-T)^T(XW-T) \right)
+\end{equation}
+this problem can be solved analytically and  the closed form solution is\begin{equation}
+	W^*=(X^TX)^{-1}X^TT
+\end{equation}
+given a new sample $\mathbf x$, the prediction is calculated as follows:\begin{equation}
+	\mathbf y(\mathbf x)={W^*}^T\mathbf x = \begin{pmatrix}
+		\mathbf w_1^T\mathbf x \\
+		\mathbf w_2^T\mathbf x \\
+		\vdots                 \\
+		\mathbf w_K^T\mathbf x
+	\end{pmatrix}
+\end{equation}
+$\mathbf x$ is labeled in class $C_k$ if\begin{equation}
+	k=\arg\max_{1\le j\le K}\mathbf w_j^T\mathbf x
+\end{equation}
+This method is not robust to \textit{outliers}, that is sample in $D$ that are far from all the other samples, this points ''weights'' more for the linear discriminant, and the found solution will not be consistent with the dataset, as shown in figure \ref{fig:outliers}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.5\textwidth]{images/outliers.png}
+	\caption{linear discriminant without and with outliers.}
+	\label{fig:outliers}
+\end{figure}
+
+\subsection{Perceptron}
+A perceptron is a linear model where the output is filtered by the Heaviside step function :\begin{equation}
+	o(\mathbf x)=H(\mathbf w^T\mathbf x)=\begin{cases}
+		1 \text{ if }w^T\mathbf x>0 \\
+		0 \text{ if }w^T\mathbf x\le 0
+	\end{cases}
+\end{equation}
+In this context for binary classification, the classes are denoted $-1$ and $+1$.
+Given a dataset $D=\{(\mathbf x_n,t_n)_{n=1}^N\}$ with $t_n\in\{-1,+1\}$, we can consider as error function the squared error\begin{equation}
+	E(\mathbf w)=\frac{1}{2}\sum_{n=1}^N(t_n-o(\mathbf x_n))=\frac{1}{2}\sum_{n=1}^N(t_n-H(\mathbf w^T\mathbf x))
+\end{equation}
+to find the best model $\mathbf w$ we can apply the \textit{gradient descent}, the partial derivative of $E$ respect one fo the $d+1$ parameter is\begin{align}
+	 & \frac{\partial E}{\partial w_i}=                                                  \\&\frac{\partial}{\partial w_i}\frac{1}{2}\sum_{n=1}^N(t_n-H(\mathbf w^T\mathbf x))=\\
+	 & \frac{1}{2}\sum_{n=1}^N\frac{\partial}{\partial w_i}(t_n-H(\mathbf w^T\mathbf x))
+\end{align}
+since the function $H$ is not differentiable, we consider the error function of the linear model without the filtering\begin{equation}
+	E(\mathbf w)=\frac{1}{2}\sum_{n=1}^N(t_n-\mathbf w^T\mathbf x)
+\end{equation}
+in this case we can find the derivative analytically\begin{align}
+	 & \frac{\partial E}{\partial w_i}=                                                \\&\frac{\partial}{\partial w_i}\frac{1}{2}\sum_{n=1}^N(t_n-\mathbf w^T\mathbf x)=\\
+	 & \frac{1}{2}\sum_{n=1}^N\frac{\partial}{\partial w_i}(t_n-\mathbf w^T\mathbf x)= \\
+	 & \sum_{n=1}^N(t_n-\mathbf w^T\mathbf x_n)\cdot (-\mathbf x_{ni})
+\end{align}
+so we can compute the gradient of $E$ at each point\begin{equation}
+	\nabla E(\mathbf w)=\begin{pmatrix}
+		\sum_{n=1}^N(t_n-\mathbf w^T\mathbf x_n)\cdot (-\mathbf x_{n1}) \\
+		\vdots                                                          \\
+		\sum_{n=1}^N(t_n-\mathbf w^T\mathbf x_n)\cdot (-\mathbf x_{nd})
+	\end{pmatrix}
+\end{equation}
+we denote $\mathbf x_{ni}=x_{ni}$  to emphasize that is a real number ($i$-th component of vector $\mathbf x_n$). We can consider the thresholded of the step function:\begin{equation}
+	\nabla E(\mathbf w)=\begin{pmatrix}
+		\sum_{n=1}^N(t_n-H(\mathbf w^T\mathbf x_n))(- x_{n1}) \\
+		\vdots                                                \\
+		\sum_{n=1}^N(t_n-H(\mathbf w^T\mathbf x_n))(- x_{nd})
+	\end{pmatrix}
+\end{equation}
+$\mathbf w$ can be found by an iterative method described as follows:\begin{enumerate}
+	\item initialize $\mathbf w$ with small random values
+	\item repeat the following until a termination condition:\begin{itemize}
+		      \item $\mathbf w\leftarrow \mathbf w-\eta\nabla E(\mathbf w)$
+	      \end{itemize}
+	\item return $\mathbf w$
+\end{enumerate}
+In the step $$\mathbf w\leftarrow \mathbf w-\eta\nabla E(\mathbf w)$$
+we are moving towards a direction where the error decrease.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{images/grad_desc.eps}
+	\caption{In this case $\mathbf w\in \R$, with $w^k$ is denoted the value of $\mathbf w$ at the iteration $k$.}
+	\label{fig:grad}
+\end{figure}
+
+$\eta$ is a real positive value, is an hyperparameter that tells ''how strongly'' the descent follows the direction of the gradient. The more $\eta$ is small, the more the precision are high and the slow the algorithm will converge, linearly separable data and sufficient small $\eta$ ar sufficient conditions to make the algorithm converge. Since at each step we have to compute the gradient by iterating on all the samples, we can consider a variant of the methods called \textit{stochastic gradient descent} where the error function is calculated not on $D$ but on a subset $S\subset D$ extracted randomly.\begin{equation}
+	\nabla E_S(\mathbf w)=\begin{pmatrix}
+		\sum_{\mathbf x_n\in S}(t_n-H(\mathbf w^T\mathbf x_n))(- x_{n1}) \\
+		\vdots                                                           \\
+		\sum_{\mathbf x_n\in S}(t_n-H(\mathbf w^T\mathbf x_n))(- x_{nd})
+	\end{pmatrix}
+\end{equation}
+Suitable solution for the termination condition may be\begin{itemize}
+	\item the error $E$ reached a sufficient small value
+	\item after a predefined number of iteration.
+\end{itemize}
+After we learned a model $\mathbf w^*$, a new sample $\mathbf x$ is predicted with $H({\mathbf  w^*}^T\mathbf x)$.
 % Bibliography and citation part, actually unused, keeped for compilation errors
 %
 \bibliographystyle{plain}   % or abbrv/unsrt etc.
